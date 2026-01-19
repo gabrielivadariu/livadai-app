@@ -130,9 +130,9 @@ function MainTabs({ user }) {
         tabBarStyle: {
           backgroundColor: livadaiColors.primary,
           borderTopColor: "#029db3",
-          height: 56,
-          paddingBottom: bottomInset,
-          paddingTop: 4,
+          height: 64 + bottomInset,
+          paddingBottom: Math.max(6, bottomInset),
+          paddingTop: 8,
         },
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#e0f7fa",
