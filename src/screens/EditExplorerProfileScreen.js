@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,9 +6,11 @@ import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGUAGES } from "../constants/languages";
+import { AuthContext } from "../context/AuthContext";
 
 export default function EditExplorerProfileScreen({ navigation }) {
   const { t } = useTranslation();
+  const { saveAuth } = useContext(AuthContext);
   const [displayName, setDisplayName] = useState("");
   const [age, setAge] = useState("");
   const [languages, setLanguages] = useState([]);
@@ -27,7 +29,7 @@ export default function EditExplorerProfileScreen({ navigation }) {
         setAge(data?.age ? String(data.age) : "");
         setLanguages(data?.languages || []);
         setBio(data?.shortBio || "");
-        setPhoto(data?.profilePhoto || "");
+        setPhoto(data?.avatar || data?.profilePhoto || "");
         setPhone(data?.phone || "");
       } catch (_e) {
         Alert.alert(t("error"), t("loadError", { defaultValue: "Could not load profile" }));
@@ -80,9 +82,13 @@ export default function EditExplorerProfileScreen({ navigation }) {
         age: age ? Number(age) : undefined,
         languages,
         shortBio: bio,
-        profilePhoto: photo,
+        avatar: photo,
         phone,
       });
+      const meRes = await api.get("/auth/me");
+      if (meRes?.data?.user) {
+        await saveAuth(meRes.data.user, null);
+      }
       Alert.alert("", t("savedSuccess"));
       navigation.goBack();
     } catch (e) {

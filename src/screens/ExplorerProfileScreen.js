@@ -116,8 +116,8 @@ export default function ExplorerProfileScreen({ navigation, route }) {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.cardCenter}>
           <View style={styles.avatarBox}>
-            {profile?.profilePhoto ? (
-              <Image source={{ uri: profile.profilePhoto }} style={styles.avatar} />
+            {profile?.avatar ? (
+              <Image source={{ uri: profile.avatar }} style={styles.avatar} />
             ) : (
               <Ionicons name="person" size={42} color="#fff" />
           )}
