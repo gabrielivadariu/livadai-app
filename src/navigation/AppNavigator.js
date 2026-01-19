@@ -122,6 +122,7 @@ function MainTabs({ user }) {
   const isHost = user?.role === "HOST" || user?.role === "BOTH";
   const insets = useSafeAreaInsets();
   const bottomInset = insets.bottom || 0;
+  const bottomPad = Math.min(bottomInset, 12);
 
   return (
     <Tab.Navigator
@@ -130,9 +131,9 @@ function MainTabs({ user }) {
         tabBarStyle: {
           backgroundColor: livadaiColors.primary,
           borderTopColor: "#029db3",
-          height: 45 + bottomInset,
-          paddingBottom: Math.max(2, bottomInset),
-          paddingTop: 2,
+          height: 50 + bottomPad,
+          paddingBottom: Math.max(4, bottomPad),
+          paddingTop: 6,
         },
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#e0f7fa",
