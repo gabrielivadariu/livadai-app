@@ -115,7 +115,7 @@ export default function MyActivitiesScreen({ navigation }) {
         style={styles.card}
         onPress={() => {
           if (expId) {
-            navigation.navigate("ExperienceDetail", { id: expId });
+            navigation.navigate("ExperienceDetail", { id: expId, bookingId: item.id });
           }
         }}
       >

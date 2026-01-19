@@ -54,7 +54,7 @@ const SUPPORTED_LANGUAGES = {
 };
 
 export default function ExperienceDetailScreen({ route, navigation }) {
-  const { id } = route.params;
+  const { id, bookingId } = route.params || {};
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();
   const [item, setItem] = useState(null);
@@ -73,15 +73,31 @@ export default function ExperienceDetailScreen({ route, navigation }) {
   const [shareBusy, setShareBusy] = useState(false);
 
   useEffect(() => {
+    let active = true;
     (async () => {
       try {
         const { data } = await api.get(`/experiences/${id}`);
+        if (!active) return;
         setItem(data);
+      } catch (_e) {
+        if (!bookingId) return;
+        try {
+          const { data } = await api.get(`/bookings/${bookingId}`);
+          if (!active) return;
+          if (data?.experience) {
+            setItem(data.experience);
+          }
+        } catch (_err) {
+          // keep item null
+        }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     })();
-  }, [id]);
+    return () => {
+      active = false;
+    };
+  }, [id, bookingId]);
 
   useEffect(() => {
     if (!user) return;
