@@ -75,20 +75,30 @@ export default function ExperienceDetailScreen({ route, navigation }) {
   useEffect(() => {
     let active = true;
     (async () => {
+      if (!id && !bookingId) {
+        if (active) setLoading(false);
+        return;
+      }
       try {
-        const { data } = await api.get(`/experiences/${id}`);
-        if (!active) return;
-        setItem(data);
-      } catch (_e) {
-        if (!bookingId) return;
-        try {
-          const { data } = await api.get(`/bookings/${bookingId}`);
-          if (!active) return;
-          if (data?.experience) {
-            setItem(data.experience);
+        if (bookingId) {
+          try {
+            const { data } = await api.get(`/bookings/${bookingId}`);
+            if (active && data?.experience) {
+              setItem(data.experience);
+            }
+          } catch (_e) {
+            // ignore booking fallback errors
           }
-        } catch (_err) {
-          // keep item null
+        }
+        if (id) {
+          try {
+            const { data } = await api.get(`/experiences/${id}`);
+            if (active) {
+              setItem((prev) => (prev ? { ...prev, ...data } : data));
+            }
+          } catch (_e) {
+            // ignore experience fetch errors when booking fallback exists
+          }
         }
       } finally {
         if (active) setLoading(false);
