@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { livadaiColors } from "../theme/theme";
 import { AuthContext } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import api from "../services/api";
 
 export default function BecomeHostScreen({ navigation }) {
   const { t } = useTranslation();
@@ -12,15 +13,32 @@ export default function BecomeHostScreen({ navigation }) {
   const becomeHost = ctx.becomeHost;
 
   // Set up local state even if user is missing (values stay empty)
-  const [displayName, setDisplayName] = useState(user?.name || "");
+  const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [languages, setLanguages] = useState("RO");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("RO");
-  const [phone, setPhone] = useState(user?.phone || "");
+  const [phone, setPhone] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [confirmInfo, setConfirmInfo] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+    api
+      .get("/users/me/profile")
+      .then((res) => {
+        if (!active) return;
+        const data = res?.data || {};
+        setDisplayName(data.displayName || data.name || "");
+        setPhone(data.phone || "");
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [user]);
 
   // Guard render when user is not present
   if (!user) {

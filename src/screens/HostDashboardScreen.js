@@ -16,25 +16,33 @@ export default function HostDashboardScreen({ navigation }) {
   const { user, logout } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
   const [stats, setStats] = useState({ experiences: 0, bookings: 0, rating: "-" });
+  const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const expRes = await api.get("/experiences/me");
-      const bookRes = await api.get("/bookings/host");
+      const [expRes, bookRes, hostRes, profileRes] = await Promise.all([
+        api.get("/experiences/me"),
+        api.get("/bookings/host"),
+        api.get("/hosts/me/profile").catch(() => ({ data: null })),
+        api.get("/users/me/profile").catch(() => ({ data: null })),
+      ]);
       setStats({
         experiences: expRes.data?.length || 0,
         bookings: bookRes.data?.length || 0,
-        rating: user?.rating_avg ? Number(user.rating_avg).toFixed(1) : "-",
+        rating: hostRes?.data?.rating_avg ? Number(hostRes.data.rating_avg).toFixed(1) : "-",
       });
+      const resolvedName = profileRes?.data?.displayName || profileRes?.data?.name || "";
+      setProfileName(resolvedName);
     } catch (e) {
       setStats({ experiences: 0, bookings: 0, rating: "-" });
+      setProfileName("");
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -75,7 +83,7 @@ export default function HostDashboardScreen({ navigation }) {
       />
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <Text style={styles.title}>{t("hostDashboardTitle")}</Text>
-        <Text style={styles.subtitle}>{t("hostDashboardSubtitle", { name: user?.name || "Host" })}</Text>
+        <Text style={styles.subtitle}>{t("hostDashboardSubtitle", { name: profileName || "Host" })}</Text>
 
         <View style={styles.card}> 
           <Text style={styles.cardLabel}>{t("hostQuickStats")}</Text>
