@@ -49,7 +49,11 @@ function ExperiencesStack() {
       <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
       <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: "Notifications" }} />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: "", headerBackTitleVisible: false }}
+      />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
@@ -72,7 +76,11 @@ function MapStack() {
       <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
       <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: "Notifications" }} />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: "", headerBackTitleVisible: false }}
+      />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
@@ -94,7 +102,11 @@ function MyActivitiesStack() {
       <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
       <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: "Notifications" }} />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: "", headerBackTitleVisible: false }}
+      />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
