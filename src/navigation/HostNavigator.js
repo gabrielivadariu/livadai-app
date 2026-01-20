@@ -28,7 +28,7 @@ export default function HostNavigator() {
         options={({ route }) => ({ title: route.params?.experience?.title || "Edit Experience" })}
       />
       <Stack.Screen name="HostBookings" component={HostBookingsScreen} options={{ title: "Bookings" }} />
-      <Stack.Screen name="Conversations" component={ConversationsScreen} options={{ title: "Messages" }} />
+      <Stack.Screen name="Conversations" component={ConversationsScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="Chat"
         component={ChatScreen}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl, StyleSheet, Image } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import api from "../services/api";
 import { Ionicons } from "@expo/vector-icons";
 import { livadaiColors } from "../theme/theme";
@@ -57,28 +57,20 @@ export default function ConversationsScreen({ navigation }) {
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
   if (error)
     return (
-      <SafeAreaView style={{ flex: 1, paddingTop: insets.top + 8, backgroundColor: "#f4f6fb" }}>
+      <View style={{ flex: 1, paddingTop: insets.top + 8, backgroundColor: "#f4f6fb" }}>
         <Text style={{ padding: 16 }}>{error}</Text>
-      </SafeAreaView>
+      </View>
     );
 
   return (
-    <SafeAreaView style={{ flex: 1, paddingTop: insets.top + 8, backgroundColor: "#f4f6fb" }}>
-      <View style={styles.header}>
-        <View style={styles.headerRow}>
-          <Text style={styles.headerTitle}>{t("messages")}</Text>
-          {unreadTotal > 0 ? (
-            <View style={styles.unreadBadge}>
-              <Text style={styles.unreadBadgeText}>{unreadTotal}</Text>
-            </View>
-          ) : null}
-        </View>
-        <Text style={styles.headerSubtitle}>{t("messagesSubtitle", { defaultValue: "" })}</Text>
-      </View>
+    <View style={{ flex: 1, paddingTop: insets.top + 8, backgroundColor: "#f4f6fb" }}>
+      <TouchableOpacity style={[styles.backButton, { top: insets.top + 6 }]} onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={22} color={livadaiColors.primary} />
+      </TouchableOpacity>
       <FlatList
         data={items.sort((a, b) => new Date(b.lastMessageAt || 0) - new Date(a.lastMessageAt || 0))}
         keyExtractor={(item) => item.bookingId}
-        contentContainerStyle={items.length ? undefined : styles.emptyContainer}
+        contentContainerStyle={[items.length ? undefined : styles.emptyContainer, styles.listContent]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -144,15 +136,12 @@ export default function ConversationsScreen({ navigation }) {
           </View>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: { paddingHorizontal: 16, paddingBottom: 8 },
-  headerRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  headerTitle: { fontSize: 24, fontWeight: "800", color: "#0f172a" },
-  headerSubtitle: { color: "#64748b", marginTop: 2 },
+  listContent: { paddingTop: 44, paddingBottom: 20 },
   emptyContainer: { flexGrow: 1, justifyContent: "center" },
   emptyState: { alignItems: "center", paddingHorizontal: 24, gap: 8 },
   emptyTitle: { color: livadaiColors.secondaryText, fontSize: 16, fontWeight: "600" },
@@ -199,4 +188,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   unreadPillText: { color: "#fff", fontWeight: "700", fontSize: 11 },
+  backButton: {
+    position: "absolute",
+    left: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    shadowColor: "#0f172a",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+    zIndex: 10,
+  },
 });
