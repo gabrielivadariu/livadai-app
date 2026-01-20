@@ -42,6 +42,7 @@ const initialForm = {
   environment: "OUTDOOR",
   startsAt: null,
   endsAt: null,
+  durationMinutes: "",
   country: "Romania",
   countryCode: "RO",
   city: "",
@@ -245,12 +246,16 @@ function ExperienceCreateWizard({ navigation }) {
   const scheduleErrors = useMemo(() => {
     const errors = {};
     if (!form.startsAt) errors.startsAt = t("fieldRequired");
-    if (!form.endsAt) errors.endsAt = t("fieldRequired");
+    const hasDuration = form.durationMinutes && Number(form.durationMinutes) > 0;
+    if (!form.endsAt && !hasDuration) errors.endsAt = t("scheduleRequired");
     if (form.startsAt && form.endsAt && new Date(form.endsAt) <= new Date(form.startsAt)) {
       errors.endsAt = t("endAfterStart");
     }
+    if (form.durationMinutes && Number(form.durationMinutes) <= 0) {
+      errors.durationMinutes = t("durationInvalid");
+    }
     return errors;
-  }, [form.endsAt, form.startsAt]);
+  }, [form.durationMinutes, form.endsAt, form.startsAt, t]);
 
   const pricingErrors = useMemo(() => {
     const errors = {};
@@ -383,7 +388,8 @@ function ExperienceCreateWizard({ navigation }) {
         maxParticipants: form.activityType === "GROUP" ? Number(form.maxParticipants) : 1,
         environment: form.environment || "OUTDOOR",
         startsAt: form.startsAt,
-        endsAt: form.endsAt,
+        endsAt: form.endsAt || undefined,
+        durationMinutes: form.durationMinutes ? Number(form.durationMinutes) : undefined,
         country: form.country || "Romania",
         countryCode: form.countryCode || "RO",
         city: form.city,
@@ -918,6 +924,18 @@ function StepWhenWhere({
           </View>
         </TouchableOpacity>
         {showErrors && errors.endsAt ? <Text style={styles.errorText}>{errors.endsAt}</Text> : null}
+
+        <Text style={styles.pickerLabel}>{t("durationMinutesLabel")}</Text>
+        <TextInput
+          placeholder={t("durationMinutesPlaceholder")}
+          value={String(form.durationMinutes || "")}
+          onChangeText={(v) => onChange("durationMinutes", v.replace(/[^0-9]/g, ""))}
+          keyboardType="number-pad"
+          style={styles.input}
+          placeholderTextColor={"#9ca3af"}
+        />
+        {showErrors && errors.durationMinutes ? <Text style={styles.errorText}>{errors.durationMinutes}</Text> : null}
+        {showErrors && errors.endsAt ? <Text style={styles.secondaryText}>{t("scheduleHint")}</Text> : null}
 
         {form.startsAt && form.endsAt ? (
           <Text style={styles.summaryText}>
