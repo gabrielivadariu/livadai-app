@@ -39,7 +39,7 @@ export default function HostNavigator() {
       <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ title: "Host Profile" }} />
       <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ title: "Edit Host Profile" }} />
       <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ title: "Wallet / Payments" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: "", headerBackTitleVisible: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking" }} />
     </Stack.Navigator>

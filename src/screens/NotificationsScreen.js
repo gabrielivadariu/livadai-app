@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
@@ -150,7 +150,10 @@ export default function NotificationsScreen({ navigation }) {
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
+      <TouchableOpacity style={[styles.backButton, { top: insets.top + 6 }]} onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={22} color={livadaiColors.primary} />
+      </TouchableOpacity>
       <Text style={styles.header}>{t("notifications")}</Text>
       <FlatList
         data={items}
@@ -173,13 +176,31 @@ export default function NotificationsScreen({ navigation }) {
           ) : null
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f7fb", paddingHorizontal: 12, paddingTop: 8 },
-  header: { fontSize: 22, fontWeight: "900", color: livadaiColors.primary, marginBottom: 10 },
+  container: { flex: 1, backgroundColor: "#f5f7fb", paddingHorizontal: 12 },
+  header: { fontSize: 22, fontWeight: "900", color: livadaiColors.primary, marginBottom: 10, paddingLeft: 44 },
+  backButton: {
+    position: "absolute",
+    left: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    shadowColor: "#0f172a",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+    zIndex: 10,
+  },
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",
