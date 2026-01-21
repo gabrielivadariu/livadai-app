@@ -300,6 +300,7 @@
   "environmentLabel": "Mediu",
   "durationHours": "Durată: {{count}} ore",
   "availableSpots": "{{count}} locuri disponibile",
+  "myBookedSpots": "Locuri rezervate: {{count}}",
   "myActivitiesTab": "Activitățile mele",
   "hostTab": "Host",
   "profileTab": "Profil",

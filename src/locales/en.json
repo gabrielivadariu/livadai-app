@@ -199,6 +199,7 @@
   "environmentLabel": "Environment",
   "durationHours": "Duration: {{count}} hours",
   "availableSpots": "{{count}} available spots",
+  "myBookedSpots": "Seats booked: {{count}}",
   "verifiedHost": "Verified host",
   "viewHostProfile": "View host profile",
   "messageHost": "Message host",

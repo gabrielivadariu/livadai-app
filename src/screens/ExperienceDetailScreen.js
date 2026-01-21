@@ -357,6 +357,12 @@ export default function ExperienceDetailScreen({ route, navigation }) {
                 : t("individualLabel")}
             </Text>
           </View>
+          {myBooking?.quantity ? (
+            <View style={styles.infoRow}>
+              <Ionicons name="checkmark-circle-outline" size={18} color="#0f172a" />
+              <Text style={styles.body}>{t("myBookedSpots", { count: myBooking.quantity })}</Text>
+            </View>
+          ) : null}
           {envLabel ? (
             <View style={styles.infoRow}>
               <Ionicons name="leaf-outline" size={18} color="#0f172a" />
