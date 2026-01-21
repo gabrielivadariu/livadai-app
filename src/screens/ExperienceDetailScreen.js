@@ -267,6 +267,10 @@ export default function ExperienceDetailScreen({ route, navigation }) {
       Alert.alert("", t("experienceStartedCannotBook"));
       return;
     }
+    if (user?._id && item?.host?._id && user._id === item.host._id) {
+      Alert.alert("", t("experienceOwnCannotBook"));
+      return;
+    }
     try {
       const quantity = item.activityType === "GROUP" ? qty : 1;
       const { data } = await api.post("/payments/create-checkout", { experienceId: id, quantity });
@@ -277,7 +281,12 @@ export default function ExperienceDetailScreen({ route, navigation }) {
         await Linking.openURL(data.checkoutUrl);
       }
     } catch (e) {
-      Alert.alert("", e?.response?.data?.message || t("paymentFailed", { defaultValue: "Payment failed" }));
+      const serverMessage = e?.response?.data?.message || "";
+      if (serverMessage.toLowerCase().includes("own experience")) {
+        Alert.alert("", t("experienceOwnCannotBook"));
+      } else {
+        Alert.alert("", serverMessage || t("paymentFailed", { defaultValue: "Payment failed" }));
+      }
     }
   };
 

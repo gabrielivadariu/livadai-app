@@ -133,6 +133,7 @@
   "reviewsLabel": "recenzii",
   "bookTickets": "Rezervă bilete",
   "experienceStartedCannotBook": "Această experiență a început deja și nu mai poate fi rezervată.",
+  "experienceOwnCannotBook": "Nu poți rezerva propria experiență.",
   "quantity": "Cantitate",
   "depositLabel": "Depozit (rambursabil)",
   "total": "Total",

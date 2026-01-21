@@ -133,6 +133,7 @@
   "reviewsLabel": "reviews",
   "bookTickets": "Book tickets",
   "experienceStartedCannotBook": "This experience has already started and can no longer be booked.",
+  "experienceOwnCannotBook": "You can't book your own experience.",
   "quantity": "Quantity",
   "depositLabel": "Deposit (refundable)",
   "total": "Total",
