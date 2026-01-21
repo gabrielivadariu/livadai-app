@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet, Image } from "react-native";
 import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
@@ -20,10 +20,51 @@ export default function ChatScreen({ route, navigation }) {
   const [text, setText] = useState("");
   const [chatBlocked, setChatBlocked] = useState(false);
   const [blockMessage, setBlockMessage] = useState("");
+  const [bookingInfo, setBookingInfo] = useState(null);
   const listRef = useRef(null);
+
+  const loadBooking = async () => {
+    try {
+      const { data } = await api.get(`/bookings/${bookingId}`);
+      setBookingInfo(data || null);
+    } catch (_e) {
+      setBookingInfo(null);
+    }
+  };
+
+  const chatArchived = useMemo(() => {
+    if (!bookingInfo?.chatArchivedAt) return false;
+    const archivedAt = new Date(bookingInfo.chatArchivedAt);
+    return !Number.isNaN(archivedAt.getTime()) && archivedAt <= new Date();
+  }, [bookingInfo?.chatArchivedAt]);
+
+  const chatAllowed = useMemo(() => {
+    if (!bookingInfo?.status || chatArchived) return false;
+    return ["PAID", "COMPLETED", "DEPOSIT_PAID", "PENDING_ATTENDANCE", "AUTO_COMPLETED", "NO_SHOW", "DISPUTED"].includes(
+      bookingInfo.status
+    );
+  }, [bookingInfo?.status, chatArchived]);
+
+  const chatBanner = useMemo(() => {
+    if (!bookingInfo?._id || chatArchived) return null;
+    if (bookingInfo.status === "DISPUTED") return t("chat_dispute_active_hint");
+    if (bookingInfo.disputeResolvedAt) return t("chat_dispute_resolved_hint");
+    return t("chat_expiry_hint");
+  }, [bookingInfo, chatArchived, t]);
 
   const loadMessages = async () => {
     try {
+      if (!chatAllowed) {
+        setMessages([]);
+        if (chatArchived) {
+          setChatBlocked(true);
+          setBlockMessage(t("chat_archived"));
+        } else {
+          setChatBlocked(true);
+          setBlockMessage(t("chatAfterPayment"));
+        }
+        return;
+      }
       const { data } = await api.get(`/messages/${bookingId}`);
       const normalized = (data || []).map((m) => ({
         ...m,
@@ -35,7 +76,8 @@ export default function ChatScreen({ route, navigation }) {
     } catch (e) {
       if (e?.response?.status === 403) {
         setChatBlocked(true);
-        setBlockMessage(e?.response?.data?.message || "Chat unavailable.");
+        const msg = e?.response?.data?.message;
+        setBlockMessage(msg === "Chat archived." ? t("chat_archived") : t("chatAfterPayment"));
       } else {
         setError("Nu s-au putut încărca mesajele");
       }
@@ -60,6 +102,7 @@ export default function ChatScreen({ route, navigation }) {
   };
 
   useEffect(() => {
+    loadBooking();
     loadMessages();
     markMessageNotificationsRead();
     const interval = setInterval(loadMessages, 8000);
@@ -73,7 +116,7 @@ export default function ChatScreen({ route, navigation }) {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!text.trim() || chatBlocked) return;
+    if (!text.trim() || chatBlocked || !chatAllowed) return;
     const content = text.trim();
     setText("");
     try {
@@ -88,7 +131,8 @@ export default function ChatScreen({ route, navigation }) {
     } catch (e) {
       if (e?.response?.status === 403) {
         setChatBlocked(true);
-        setBlockMessage(e?.response?.data?.message || "Chat unavailable.");
+        const msg = e?.response?.data?.message;
+        setBlockMessage(msg === "Chat archived." ? t("chat_archived") : t("chatAfterPayment"));
       } else {
         setError("Nu s-a putut trimite mesajul");
       }
@@ -121,10 +165,9 @@ export default function ChatScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {blockMessage ? (
-        <Text style={{ color: "red", marginHorizontal: 12, marginTop: 8 }}>{blockMessage}</Text>
-      ) : null}
+      {blockMessage ? <Text style={{ color: "red", marginHorizontal: 12, marginTop: 8 }}>{blockMessage}</Text> : null}
       {error ? <Text style={{ color: "red", marginBottom: 8 }}>{error}</Text> : null}
+      {chatBanner ? <View style={styles.chatBanner}><Text style={styles.chatBannerText}>{chatBanner}</Text></View> : null}
       <FlatList
         ref={listRef}
         data={messages}
@@ -159,9 +202,9 @@ export default function ChatScreen({ route, navigation }) {
           value={text}
           onChangeText={setText}
           style={styles.input}
-          editable={!chatBlocked}
+          editable={!chatBlocked && chatAllowed}
         />
-        <TouchableOpacity style={styles.sendBtn} onPress={sendMessage} disabled={chatBlocked}>
+        <TouchableOpacity style={styles.sendBtn} onPress={sendMessage} disabled={chatBlocked || !chatAllowed}>
           <Ionicons name="send" size={18} color="#fff" />
         </TouchableOpacity>
       </View>
@@ -187,6 +230,18 @@ const styles = StyleSheet.create({
   },
   headerName: { fontWeight: "800", color: "#0f172a" },
   headerSub: { color: "#475569", fontSize: 12 },
+  chatBanner: {
+    marginHorizontal: 12,
+    marginTop: 8,
+    marginBottom: 4,
+    backgroundColor: "#e0f7fa",
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "#cfe7ec",
+  },
+  chatBannerText: { color: "#0f6d77", fontSize: 12, fontWeight: "600" },
   msgRow: {
     flexDirection: "row",
     marginVertical: 6,
