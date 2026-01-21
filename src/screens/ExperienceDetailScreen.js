@@ -218,10 +218,16 @@ export default function ExperienceDetailScreen({ route, navigation }) {
 
   const isFree = !item.price || Number(item.price) <= 0;
   const priceLabel = isFree ? t("free") : `${item.price} ${item.currencyCode || "RON"} / ${t("person", { defaultValue: "person" })}`;
+  const availableSpots = item.availableSpots ?? item.remainingSpots ?? item.maxParticipants;
+  const totalSeats = item.maxParticipants || 0;
+  const occupiedSeats =
+    item.activityType === "GROUP" && totalSeats
+      ? Math.max(0, totalSeats - (availableSpots || 0))
+      : 0;
   const spotsLabel =
     item.activityType === "GROUP"
-      ? typeof item.remainingSpots === "number"
-        ? t("spotsLeft", { count: item.remainingSpots })
+      ? typeof availableSpots === "number"
+        ? t("spotsLeft", { count: availableSpots })
         : t("groupExperience", { defaultValue: "Group experience" })
       : item.soldOut
         ? t("soldOut")
@@ -251,12 +257,8 @@ export default function ExperienceDetailScreen({ route, navigation }) {
       ? t("envOutdoor")
       : null;
 
-  const showAvailable = item.activityType === "GROUP" && (item.maxParticipants || 0) > 1;
-  const availableSpots = item.availableSpots ?? item.remainingSpots ?? item.maxParticipants;
-  const bookedSpots =
-    item.activityType === "GROUP" && (item.maxParticipants || 0)
-      ? Math.max(0, (item.maxParticipants || 0) - (availableSpots || 0))
-      : 0;
+  const showAvailable = item.activityType === "GROUP" && totalSeats > 1;
+  const bookedSpots = item.activityType === "GROUP" && totalSeats ? occupiedSeats : 0;
 
   const handleBook = async () => {
     const now = new Date();
@@ -342,7 +344,7 @@ export default function ExperienceDetailScreen({ route, navigation }) {
             <Ionicons name="people-outline" size={18} color="#0f172a" />
             <Text style={styles.body}>
               {item.activityType === "GROUP"
-                ? t("groupSlots", { booked: bookedSpots, total: item.maxParticipants || 0 })
+                ? t("groupSlots", { booked: bookedSpots, total: totalSeats })
                 : t("individualLabel")}
             </Text>
           </View>
@@ -467,8 +469,8 @@ export default function ExperienceDetailScreen({ route, navigation }) {
           <View style={styles.infoRow}>
             <Ionicons name="people-outline" size={18} color="#0f172a" />
             <Text style={styles.body}>
-              {t("groupSize", { count: item.maxParticipants || "-" })}{" "}
-              {typeof item.remainingSpots === "number" ? `· ${t("spotsLeft", { count: item.remainingSpots })}` : ""}
+              {t("groupSize", { count: totalSeats || "-" })}{" "}
+              {typeof availableSpots === "number" ? `· ${t("spotsLeft", { count: availableSpots })}` : ""}
             </Text>
           </View>
         ) : (
@@ -493,7 +495,7 @@ export default function ExperienceDetailScreen({ route, navigation }) {
               <TouchableOpacity
                 style={styles.qtyBtn}
                 onPress={() => {
-                  const max = item.remainingSpots ?? 1;
+                  const max = availableSpots ?? 1;
                   setQty((q) => Math.min(max, q + 1));
                 }}
               >

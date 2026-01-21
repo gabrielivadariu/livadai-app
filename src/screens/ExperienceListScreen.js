@@ -98,6 +98,8 @@ export default function ExperienceListScreen({ navigation, route }) {
     const extraLangs = item.languages?.length > 2 ? ` +${item.languages.length - 2}` : "";
     const showSpots = item.activityType === "GROUP" && (item.maxParticipants || 0) > 1;
     const available = item.availableSpots ?? item.remainingSpots ?? item.maxParticipants;
+    const totalSeats = item.maxParticipants || 0;
+    const occupiedSeats = totalSeats ? Math.max(0, totalSeats - (available ?? 0)) : 0;
     const soldOut = showSpots && (available ?? 0) <= 0;
     const locale = i18n.language?.startsWith("ro") ? "ro-RO" : "en-US";
     const start = item.startsAt || item.startDate;
@@ -190,6 +192,14 @@ export default function ExperienceListScreen({ navigation, route }) {
                 {durationLabel ? (
                   <View style={styles.metaItem}>
                     <Text style={styles.metaText} numberOfLines={1}>{durationLabel}</Text>
+                  </View>
+                ) : null}
+                {showSpots ? (
+                  <View style={styles.metaItem}>
+                    <Ionicons name="people-outline" size={14} color="#475569" />
+                    <Text style={styles.metaText} numberOfLines={1}>
+                      {t("groupSlots", { booked: occupiedSeats, total: totalSeats })} {t("participants")}
+                    </Text>
                   </View>
                 ) : null}
             </View>
