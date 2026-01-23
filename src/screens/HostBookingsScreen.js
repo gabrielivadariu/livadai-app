@@ -33,10 +33,19 @@ export default function HostBookingsScreen({ navigation }) {
     return start ? new Date(start) : null;
   };
 
-  const sortedItems = useMemo(() => {
-    return [...items].sort((a, b) => {
-      const aDate = startDate(a)?.getTime() || 0;
-      const bDate = startDate(b)?.getTime() || 0;
+  const groupedItems = useMemo(() => {
+    const map = {};
+    items.forEach((booking) => {
+      const exp = booking.experience || {};
+      const expId = exp._id || "unknown";
+      if (!map[expId]) {
+        map[expId] = { experience: exp, bookings: [] };
+      }
+      map[expId].bookings.push(booking);
+    });
+    return Object.values(map).sort((a, b) => {
+      const aDate = startDate({ experience: a.experience })?.getTime() || 0;
+      const bDate = startDate({ experience: b.experience })?.getTime() || 0;
       if (bDate !== aDate) return bDate - aDate;
       return 0;
     });
@@ -56,8 +65,8 @@ export default function HostBookingsScreen({ navigation }) {
 
   return (
     <FlatList
-      data={sortedItems}
-      keyExtractor={(item) => item._id}
+      data={groupedItems}
+      keyExtractor={(item) => item.experience?._id || item.experience?.id || String(item.experience?.title || Math.random())}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -69,12 +78,19 @@ export default function HostBookingsScreen({ navigation }) {
       }
       ListEmptyComponent={<Text style={{ padding: 16 }}>{t("hostBookingsEmpty")}</Text>}
       renderItem={({ item }) => {
-        const badge = statusBadge(item);
-        const sDate = startDate(item);
+        const exp = item.experience || {};
+        const sDate = startDate({ experience: exp });
+        const bookedSeats = (item.bookings || []).reduce((sum, b) => sum + (b.quantity || 1), 0);
+        const totalSeats =
+          typeof exp.maxParticipants === "number"
+            ? exp.maxParticipants
+            : typeof exp.remainingSpots === "number"
+              ? exp.remainingSpots + bookedSeats
+              : bookedSeats;
         return (
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => navigation.navigate("BookingDetailScreen", { bookingId: item._id })}
+            onPress={() => navigation.navigate("HostParticipants", { experienceId: exp._id })}
             style={{
               marginHorizontal: 12,
               marginBottom: 12,
@@ -91,23 +107,20 @@ export default function HostBookingsScreen({ navigation }) {
             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flex: 1, paddingRight: 8 }}>
                 <Text style={{ fontWeight: "800", color: "#0f172a", fontSize: 16 }} numberOfLines={2}>
-                  {item.experience?.title}
-                </Text>
-                <Text style={{ color: "#475569", marginTop: 4 }} numberOfLines={1}>
-                  {item.explorer?.name || item.explorer}
+                  {exp.title}
                 </Text>
                 <Text style={{ color: "#111827", fontWeight: "700", marginTop: 6 }}>
                   {sDate ? sDate.toLocaleString() : ""}
                 </Text>
                 <Text style={{ color: "#475569", marginTop: 2 }}>
-                  {t("spotsLabel")}: {item.quantity || 1}
+                  {t("hostBookingsOccupied")}: {bookedSeats} / {totalSeats}
                 </Text>
               </View>
-              <View style={{ backgroundColor: badge.bg, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12 }}>
-                <Text style={{ color: badge.color, fontWeight: "800" }}>{badge.text}</Text>
+              <View style={{ backgroundColor: "#e0f2fe", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12 }}>
+                <Text style={{ color: "#075985", fontWeight: "800" }}>{t("bookingActive")}</Text>
               </View>
             </View>
-            <Text style={{ color: "#475569", fontSize: 12, marginTop: 12 }}>{t("groupConfirmHint")}</Text>
+            <Text style={{ color: "#475569", fontSize: 12, marginTop: 12 }}>{t("hostBookingsParticipantsHint")}</Text>
           </TouchableOpacity>
         );
       }}
