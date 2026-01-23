@@ -35,6 +35,20 @@ export default function HostParticipantsScreen({ route, navigation }) {
       : typeof experience?.remainingSpots === "number"
         ? experience.remainingSpots + bookedSeats
         : bookedSeats;
+  const windowStartValue =
+    experience?.startsAt || experience?.startDate || experience?.date || experience?.endDate || experience?.endsAt;
+  const windowEndValue =
+    experience?.endsAt || experience?.endDate || experience?.date || experience?.startDate || experience?.startsAt;
+  const startDate = windowStartValue ? new Date(windowStartValue) : null;
+  const endDate = windowEndValue ? new Date(windowEndValue) : null;
+  const isValidStart = startDate && !Number.isNaN(startDate.getTime());
+  const isValidEnd = endDate && !Number.isNaN(endDate.getTime());
+  const now = new Date();
+  const confirmAfter = isValidStart ? new Date(startDate.getTime() + 15 * 60 * 1000) : null;
+  const confirmUntil = isValidEnd ? new Date(endDate.getTime() + 48 * 60 * 60 * 1000) : null;
+  const isBeforeWindow = confirmAfter ? now < confirmAfter : true;
+  const isAfterWindow = confirmUntil ? now > confirmUntil : false;
+  const canConfirm = !isBeforeWindow && !isAfterWindow;
 
   const actionableStatuses = new Set(["PAID", "DEPOSIT_PAID", "PENDING_ATTENDANCE"]);
   const actionableBookings = bookings.filter((b) => actionableStatuses.has(b.status));
@@ -135,10 +149,10 @@ export default function HostParticipantsScreen({ route, navigation }) {
                   borderRadius: 999,
                   paddingVertical: 12,
                   alignItems: "center",
-                  opacity: savingAction === "confirm" || !actionableBookings.length ? 0.6 : 1,
+                  opacity: savingAction === "confirm" || !actionableBookings.length || !canConfirm ? 0.6 : 1,
                 }}
                 onPress={confirmAll}
-                disabled={savingAction === "confirm" || !actionableBookings.length}
+                disabled={savingAction === "confirm" || !actionableBookings.length || !canConfirm}
               >
                 <Text style={{ color: "#fff", fontWeight: "800" }}>{t("hostParticipantsConfirmAll")}</Text>
               </TouchableOpacity>
@@ -156,6 +170,11 @@ export default function HostParticipantsScreen({ route, navigation }) {
               >
                 <Text style={{ color: "#b91c1c", fontWeight: "800" }}>{t("hostParticipantsCancelAll")}</Text>
               </TouchableOpacity>
+              {!canConfirm ? (
+                <Text style={{ color: "#6b7280", marginTop: 4 }}>
+                  {isAfterWindow ? t("hostParticipantsConfirmExpired") : t("hostParticipantsConfirmWait")}
+                </Text>
+              ) : null}
             </View>
           ) : null
         }

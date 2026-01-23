@@ -281,6 +281,8 @@
   "hostParticipantsConfirmAll": "Confirmă experiența a avut loc",
   "hostParticipantsCancelAll": "Anulează experiența",
   "hostParticipantsConfirmAllMessage": "Confirmi că experiența a avut loc pentru toți participanții?",
+  "hostParticipantsConfirmWait": "Confirmarea va fi disponibilă după începerea experienței.",
+  "hostParticipantsConfirmExpired": "Fereastra de confirmare a expirat.",
   "hostParticipantsCancelAllTitle": "Anulezi experiența?",
   "hostParticipantsCancelAllMessage": "Ești sigur că vrei să anulezi experiența? Toți participanții vor primi refund automat.",
   "hostParticipantsCancelAllConfirm": "Confirm anularea",

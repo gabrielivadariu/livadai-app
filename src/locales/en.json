@@ -306,6 +306,8 @@
   "hostParticipantsConfirmAll": "Confirm experience happened",
   "hostParticipantsCancelAll": "Cancel experience",
   "hostParticipantsConfirmAllMessage": "Confirm the experience took place for all participants?",
+  "hostParticipantsConfirmWait": "Confirmation will be available after the experience starts.",
+  "hostParticipantsConfirmExpired": "The confirmation window has expired.",
   "hostParticipantsCancelAllTitle": "Cancel experience?",
   "hostParticipantsCancelAllMessage": "Are you sure you want to cancel the experience? All participants will be refunded automatically.",
   "hostParticipantsCancelAllConfirm": "Confirm cancellation",
