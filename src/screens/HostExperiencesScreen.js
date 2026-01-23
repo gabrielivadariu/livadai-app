@@ -44,23 +44,23 @@ export default function HostExperiencesScreen({ navigation }) {
     }, [load])
   );
 
-  const confirmCancel = async (id) => {
+  const confirmPause = async (id) => {
     Alert.alert(
-      t("experienceCancelConfirmTitle"),
-      t("experienceCancelConfirmBody"),
+      t("experiencePauseConfirmTitle"),
+      t("experiencePauseConfirmBody"),
       [
         { text: t("cancel") },
         {
           text: t("confirm"),
           onPress: async () => {
             try {
-              await api.post(`/experiences/${id}/cancel`);
+              await api.patch(`/experiences/${id}`, { isActive: false, status: "DISABLED" });
               setItems((prev) =>
-                prev.map((it) => (it._id === id ? { ...it, status: "cancelled", soldOut: true, isActive: false } : it))
+                prev.map((it) => (it._id === id ? { ...it, status: "DISABLED", isActive: false } : it))
               );
               emitRefreshExperiences();
             } catch (_e) {
-              Alert.alert("", t("experienceCancelFailed", { defaultValue: "Nu s-a putut anula experiența" }));
+              Alert.alert("", t("experiencePauseFailed", { defaultValue: "Nu s-a putut dezactiva experiența" }));
             }
           },
           style: "destructive",
@@ -73,8 +73,8 @@ export default function HostExperiencesScreen({ navigation }) {
   if (error) return <Text style={{ padding: 16 }}>{error}</Text>;
 
   const computeStatus = (item) => {
-    if (item.status === "cancelled" || item.isActive === false)
-      return { label: t("statusCancelled"), bg: "#fee2e2", color: "#b91c1c" };
+    if (item.status === "DISABLED" || item.isActive === false)
+      return { label: t("statusPaused"), bg: "#e2e8f0", color: "#475569" };
     if (item.soldOut) return { label: t("statusSoldOut"), bg: "#fef9c3", color: "#92400e" };
     return { label: t("statusActive"), bg: "#dcfce7", color: "#166534" };
   };
@@ -115,8 +115,8 @@ export default function HostExperiencesScreen({ navigation }) {
               >
                 <Text style={styles.primaryText}>{t("editExperience")}</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => confirmCancel(item._id)} style={styles.secondaryBtn}>
-                <Text style={styles.secondaryText}>{t("cancelExperience")}</Text>
+              <TouchableOpacity onPress={() => confirmPause(item._id)} style={styles.secondaryBtn}>
+                <Text style={styles.secondaryText}>{t("pauseExperience")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#ef4444",
+    borderColor: "#94a3b8",
     alignItems: "center",
   },
-  secondaryText: { color: "#ef4444", fontWeight: "800" },
+  secondaryText: { color: "#475569", fontWeight: "800" },
 });
