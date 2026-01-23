@@ -58,20 +58,6 @@ export default function BookingDetailScreen({ route }) {
     }
   };
 
-  const markNoShow = async () => {
-    if (!booking) return;
-    setSaving(true);
-    try {
-      await api.post(`/bookings/${booking._id}/no-show`);
-      Alert.alert("", t("confirmGroupNoShow"));
-      await load();
-    } catch (e) {
-      Alert.alert("", e?.response?.data?.message || t("hostBookingNoShowFailed"));
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const confirmPrompt = () => {
     Alert.alert(
       t("confirmAttendanceTitle"),
@@ -83,13 +69,27 @@ export default function BookingDetailScreen({ route }) {
     );
   };
 
-  const noShowPrompt = () => {
+  const cancelBooking = async () => {
+    if (!booking) return;
+    setSaving(true);
+    try {
+      await api.post(`/bookings/${booking._id}/cancel-by-host`);
+      Alert.alert("", t("hostBookingCancelled"));
+      await load();
+    } catch (e) {
+      Alert.alert("", e?.response?.data?.message || t("hostBookingCancelFailed"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const cancelPrompt = () => {
     Alert.alert(
-      t("confirmNoShowTitle"),
-      t("confirmNoShowMessage"),
+      t("hostBookingCancelTitle"),
+      t("hostBookingCancelMessage"),
       [
         { text: t("cancel"), style: "cancel" },
-        { text: t("confirmNoShowConfirm"), style: "destructive", onPress: markNoShow },
+        { text: t("hostBookingCancelConfirm"), style: "destructive", onPress: cancelBooking },
       ]
     );
   };
@@ -206,40 +206,39 @@ export default function BookingDetailScreen({ route }) {
         </View>
       )}
 
-      <View style={styles.card}>
-        <Text style={styles.section}>{t("confirmTitle")}</Text>
-        <Text style={{ color: "#475569", marginTop: 4 }}>{t("confirmBody")}</Text>
-        {booking.status === "COMPLETED" || booking.status === "AUTO_COMPLETED" ? (
-          <Text style={{ color: "#16a34a", fontWeight: "700", marginTop: 8 }}>
-            {t("attendanceConfirmed")} · {t("actionRecorded")}
-          </Text>
-        ) : booking.status === "NO_SHOW" ? (
-          <Text style={{ color: "#dc2626", fontWeight: "700", marginTop: 8 }}>
-            {t("markedNoShow")} · {t("actionRecorded")}
-          </Text>
-        ) : booking.status === "DISPUTED" ? (
-          <Text style={{ color: "#b91c1c", fontWeight: "700", marginTop: 8 }}>{t("disputedStatus")}</Text>
-        ) : canAct ? (
-          <View style={{ gap: 10, marginTop: 12 }}>
-            <TouchableOpacity
-              disabled={saving}
-              onPress={confirmPrompt}
-              style={[styles.btn, { backgroundColor: livadaiColors.primary, opacity: saving ? 0.6 : 1 }]}
-            >
-              <Text style={styles.btnText}>{t("confirmExperience")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              disabled={saving}
-              onPress={noShowPrompt}
-              style={[styles.btn, { backgroundColor: "#f97316", opacity: saving ? 0.6 : 1 }]}
-            >
-              <Text style={styles.btnText}>{t("noOneAttended")}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <Text style={{ color: "#6b7280", marginTop: 8 }}>{t("attendanceAvailableLater")}</Text>
-        )}
-      </View>
+      {isExplorer ? null : (
+        <View style={styles.card}>
+          <Text style={styles.section}>{t("confirmTitle")}</Text>
+          <Text style={{ color: "#475569", marginTop: 4 }}>{t("confirmBody")}</Text>
+          {booking.status === "COMPLETED" || booking.status === "AUTO_COMPLETED" ? (
+            <Text style={{ color: "#16a34a", fontWeight: "700", marginTop: 8 }}>
+              {t("attendanceConfirmed")} · {t("actionRecorded")}
+            </Text>
+          ) : booking.status === "DISPUTED" ? (
+            <Text style={{ color: "#b91c1c", fontWeight: "700", marginTop: 8 }}>{t("disputedStatus")}</Text>
+          ) : (
+            <View style={{ gap: 10, marginTop: 12 }}>
+              <TouchableOpacity
+                disabled={saving || !canAct}
+                onPress={confirmPrompt}
+                style={[styles.btn, { backgroundColor: livadaiColors.primary, opacity: saving || !canAct ? 0.6 : 1 }]}
+              >
+                <Text style={styles.btnText}>{t("confirmExperience")}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={saving}
+                onPress={cancelPrompt}
+                style={[styles.btn, { backgroundColor: "#ef4444", opacity: saving ? 0.6 : 1 }]}
+              >
+                <Text style={styles.btnText}>{t("cancelExperience")}</Text>
+              </TouchableOpacity>
+              {!canAct ? (
+                <Text style={{ color: "#6b7280", marginTop: 2 }}>{t("attendanceAvailableLater")}</Text>
+              ) : null}
+            </View>
+          )}
+        </View>
+      )}
 
       {isExplorer && canDispute() && (
         <View style={styles.card}>
