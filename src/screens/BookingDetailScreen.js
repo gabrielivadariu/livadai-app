@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, TouchableOpacity, Alert, StyleSheet, Image, ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import api from "../services/api";
-import { livadaiColors } from "../theme/theme";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
@@ -12,7 +11,6 @@ export default function BookingDetailScreen({ route }) {
   const navigation = useNavigation();
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const { user } = useContext(AuthContext);
 
   const load = async () => {
@@ -29,70 +27,6 @@ export default function BookingDetailScreen({ route }) {
   useEffect(() => {
     load();
   }, [bookingId]);
-
-  const canMark = () => {
-    if (!booking) return false;
-    if (!["PAID", "DEPOSIT_PAID", "PENDING_ATTENDANCE"].includes(booking.status)) return false;
-    const start = booking.experience?.startsAt || booking.experience?.startDate || booking.date || booking.experience?.endDate;
-    const end = booking.experience?.endsAt || booking.experience?.endDate || booking.date || booking.experience?.startDate;
-    const startDate = start ? new Date(start) : null;
-    const endDate = end ? new Date(end) : null;
-    if (!startDate || !endDate) return false;
-    const windowStart = new Date(startDate.getTime() + 15 * 60 * 1000);
-    const windowEnd = new Date(endDate.getTime() + 48 * 60 * 60 * 1000);
-    const now = new Date();
-    return now >= windowStart && now <= windowEnd;
-  };
-
-  const confirm = async () => {
-    if (!booking) return;
-    setSaving(true);
-    try {
-      await api.post(`/bookings/${booking._id}/confirm-attendance`);
-      Alert.alert("", t("confirmGroupDone"));
-      await load();
-    } catch (e) {
-      Alert.alert("", e?.response?.data?.message || t("hostBookingConfirmFailed"));
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const confirmPrompt = () => {
-    Alert.alert(
-      t("confirmAttendanceTitle"),
-      t("confirmAttendanceMessage"),
-      [
-        { text: t("cancel"), style: "cancel" },
-        { text: t("confirmAttendanceConfirm"), style: "destructive", onPress: confirm },
-      ]
-    );
-  };
-
-  const cancelBooking = async () => {
-    if (!booking) return;
-    setSaving(true);
-    try {
-      await api.post(`/bookings/${booking._id}/cancel-by-host`);
-      Alert.alert("", t("hostBookingCancelled"));
-      await load();
-    } catch (e) {
-      Alert.alert("", e?.response?.data?.message || t("hostBookingCancelFailed"));
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const cancelPrompt = () => {
-    Alert.alert(
-      t("hostBookingCancelTitle"),
-      t("hostBookingCancelMessage"),
-      [
-        { text: t("cancel"), style: "cancel" },
-        { text: t("hostBookingCancelConfirm"), style: "destructive", onPress: cancelBooking },
-      ]
-    );
-  };
 
   const canDispute = () => {
     if (!booking) return false;
@@ -135,7 +69,6 @@ export default function BookingDetailScreen({ route }) {
 
   const exp = booking.experience || {};
   const explorer = booking.explorer || {};
-  const canAct = canMark();
   const isExplorer = user?.role === "EXPLORER";
 
   return (
@@ -210,33 +143,7 @@ export default function BookingDetailScreen({ route }) {
         <View style={styles.card}>
           <Text style={styles.section}>{t("confirmTitle")}</Text>
           <Text style={{ color: "#475569", marginTop: 4 }}>{t("confirmBody")}</Text>
-          {booking.status === "COMPLETED" || booking.status === "AUTO_COMPLETED" ? (
-            <Text style={{ color: "#16a34a", fontWeight: "700", marginTop: 8 }}>
-              {t("attendanceConfirmed")} · {t("actionRecorded")}
-            </Text>
-          ) : booking.status === "DISPUTED" ? (
-            <Text style={{ color: "#b91c1c", fontWeight: "700", marginTop: 8 }}>{t("disputedStatus")}</Text>
-          ) : (
-            <View style={{ gap: 10, marginTop: 12 }}>
-              <TouchableOpacity
-                disabled={saving || !canAct}
-                onPress={confirmPrompt}
-                style={[styles.btn, { backgroundColor: livadaiColors.primary, opacity: saving || !canAct ? 0.6 : 1 }]}
-              >
-                <Text style={styles.btnText}>{t("confirmExperience")}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={saving}
-                onPress={cancelPrompt}
-                style={[styles.btn, { backgroundColor: "#ef4444", opacity: saving ? 0.6 : 1 }]}
-              >
-                <Text style={styles.btnText}>{t("cancelExperience")}</Text>
-              </TouchableOpacity>
-              {!canAct ? (
-                <Text style={{ color: "#6b7280", marginTop: 2 }}>{t("attendanceAvailableLater")}</Text>
-              ) : null}
-            </View>
-          )}
+          <Text style={{ color: "#475569", marginTop: 8 }}>{t("hostParticipantsActionsHint")}</Text>
         </View>
       )}
 
