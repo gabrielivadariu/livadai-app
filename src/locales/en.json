@@ -224,6 +224,7 @@
   "noHostedExperiences": "No hosted experiences yet.",
   "upcoming": "Upcoming",
   "completed": "Completed",
+  "hostedExperienceNoParticipants": "Completed — no participants",
   "hostedExperienceCompleted": "Completed",
   "seeAll": "See all",
   "seeAllHosted": "See all hosted experiences",

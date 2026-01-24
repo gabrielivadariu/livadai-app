@@ -56,6 +56,7 @@ export default function HostedExperiencesScreen({ route }) {
     const dateLabel = dateValue ? new Date(dateValue).toLocaleDateString() : "";
     const timeLabel = item?.startTime || (item?.startsAt ? new Date(item.startsAt).toLocaleTimeString().slice(0, 5) : "");
     const participants = getParticipantsCount(item);
+    const statusLabel = participants === 0 ? t("hostedExperienceNoParticipants") : t("hostedExperienceCompleted");
     return (
       <View style={styles.card}>
         <Text style={styles.title}>{item?.title || t("hostedExperiences")}</Text>
@@ -66,7 +67,7 @@ export default function HostedExperiencesScreen({ route }) {
         <Text style={styles.meta}>
           {t("participants")}: {participants}
         </Text>
-        <Text style={styles.status}>{t("hostedExperienceCompleted")}</Text>
+        <Text style={styles.status}>{statusLabel}</Text>
       </View>
     );
   };

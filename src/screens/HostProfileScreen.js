@@ -230,18 +230,31 @@ export default function HostProfileScreen({ route, navigation }) {
           {activities.length === 0 ? (
             <Text style={styles.body}>{t("noHostedExperiences")}</Text>
           ) : (
-            activities.slice(0, 3).map((a) => (
-              <View key={a._id} style={styles.activityCard}>
-                <Text style={styles.activityTitle}>{a.title}</Text>
-                <Text style={styles.activityMeta}>
-                  {a.startDate ? new Date(a.startDate).toLocaleDateString() : ""} {a.startTime || ""}
-                </Text>
-                <Text style={styles.activityMeta}>{a.city || a.address || ""}</Text>
-                <Text style={styles.activityStatus}>
-                  {a.startDate && new Date(a.startDate) > new Date() ? t("upcoming") : t("completed")}
-                </Text>
-              </View>
-            ))
+            activities.slice(0, 3).map((a) => {
+              const startDate = a.startDate ? new Date(a.startDate) : null;
+              const participants =
+                typeof a.bookedSpots === "number"
+                  ? a.bookedSpots
+                  : typeof a.maxParticipants === "number" && typeof a.availableSpots === "number"
+                  ? Math.max(0, a.maxParticipants - a.availableSpots)
+                  : 0;
+              const isUpcoming = startDate && startDate > new Date();
+              const statusLabel = isUpcoming
+                ? t("upcoming")
+                : participants === 0
+                ? t("hostedExperienceNoParticipants")
+                : t("completed");
+              return (
+                <View key={a._id} style={styles.activityCard}>
+                  <Text style={styles.activityTitle}>{a.title}</Text>
+                  <Text style={styles.activityMeta}>
+                    {a.startDate ? new Date(a.startDate).toLocaleDateString() : ""} {a.startTime || ""}
+                  </Text>
+                  <Text style={styles.activityMeta}>{a.city || a.address || ""}</Text>
+                  <Text style={styles.activityStatus}>{statusLabel}</Text>
+                </View>
+              );
+            })
           )}
           {activities.length >= 3 ? (
             <TouchableOpacity
