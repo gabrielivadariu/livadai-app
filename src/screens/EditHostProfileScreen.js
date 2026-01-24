@@ -118,7 +118,14 @@ export default function EditHostProfileScreen({ navigation }) {
     }
   };
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader title={t("editProfile")} onBack={() => navigation.goBack()} />
+        <ActivityIndicator style={{ flex: 1 }} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>

@@ -102,8 +102,22 @@ export default function HostProfileScreen({ route, navigation }) {
     ]);
   };
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
-  if (!profile) return <Text style={{ padding: 16 }}>Host not found</Text>;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader title={t("hostProfileTitle")} onBack={() => navigation.goBack()} />
+        <ActivityIndicator style={{ flex: 1 }} />
+      </SafeAreaView>
+    );
+  }
+  if (!profile) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader title={t("hostProfileTitle")} onBack={() => navigation.goBack()} />
+        <Text style={{ padding: 16 }}>Host not found</Text>
+      </SafeAreaView>
+    );
+  }
 
   const topReviews = reviews.slice(0, 5);
   const languagesArr = Array.isArray(profile.languages)

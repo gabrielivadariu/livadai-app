@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from "r
 import { SafeAreaView } from "react-native-safe-area-context";
 import { livadaiColors } from "../theme/theme";
 import { useTranslation } from "react-i18next";
+import ScreenHeader from "../components/ScreenHeader";
 
-export default function InfoScreen({ route }) {
+export default function InfoScreen({ route, navigation }) {
   const { i18n } = useTranslation();
   const title = route?.params?.title || "Info";
   const body = route?.params?.body || "Content coming soon.";
@@ -583,9 +584,9 @@ export default function InfoScreen({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
-          <Text style={styles.title}>{title}</Text>
           {isHowItWorks ? (
             <View style={styles.stack}>
               {howItWorks.map((item, index) => (
@@ -667,8 +668,8 @@ export default function InfoScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f7fb", padding: 16 },
-  scrollContent: { paddingBottom: 24 },
+  container: { flex: 1, backgroundColor: "#f5f7fb" },
+  scrollContent: { paddingBottom: 24, paddingHorizontal: 16 },
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
@@ -680,7 +681,6 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
   },
-  title: { fontSize: 22, fontWeight: "900", color: livadaiColors.primaryText, marginBottom: 8 },
   stack: { gap: 8 },
   body: { color: livadaiColors.secondaryText, fontSize: 15, lineHeight: 21 },
   step: { color: livadaiColors.primaryText, fontSize: 16, lineHeight: 22, fontWeight: "800" },

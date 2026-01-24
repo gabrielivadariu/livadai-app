@@ -7,9 +7,9 @@ import { livadaiColors } from "../theme/theme";
 export default function ScreenHeader({ title, onBack }) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
-      <TouchableOpacity style={[styles.backButton, { top: insets.top + 6 }]} onPress={onBack}>
-        <Ionicons name="chevron-back" size={22} color={livadaiColors.primary} />
+    <View style={[styles.container, { paddingTop: insets.top + 2 }]}>
+      <TouchableOpacity style={[styles.backButton, { top: insets.top }]} onPress={onBack}>
+        <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
       </TouchableOpacity>
       <Text style={styles.header}>{title}</Text>
     </View>

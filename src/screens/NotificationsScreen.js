@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 import { useTranslation } from "react-i18next";
 import { NotificationsContext } from "../context/NotificationsContext";
+import ScreenHeader from "../components/ScreenHeader";
 
 const typeIcon = {
   BOOKING_CONFIRMED: "ticket-outline",
@@ -31,7 +31,6 @@ export default function NotificationsScreen({ navigation }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const { setUnreadCount, refreshUnread } = useContext(NotificationsContext);
 
@@ -147,14 +146,18 @@ export default function NotificationsScreen({ navigation }) {
     );
   };
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ScreenHeader title={t("notifications")} onBack={() => navigation.goBack()} />
+        <ActivityIndicator style={{ flex: 1 }} />
+      </View>
+    );
+  }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
-      <TouchableOpacity style={[styles.backButton, { top: insets.top + 6 }]} onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={22} color={livadaiColors.primary} />
-      </TouchableOpacity>
-      <Text style={styles.header}>{t("notifications")}</Text>
+    <View style={styles.container}>
+      <ScreenHeader title={t("notifications")} onBack={() => navigation.goBack()} />
       <FlatList
         data={items}
         keyExtractor={(item) => item._id}
@@ -182,25 +185,6 @@ export default function NotificationsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f5f7fb", paddingHorizontal: 12 },
-  header: { fontSize: 22, fontWeight: "900", color: livadaiColors.primary, marginBottom: 10, paddingLeft: 44 },
-  backButton: {
-    position: "absolute",
-    left: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.9)",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-    zIndex: 10,
-  },
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",

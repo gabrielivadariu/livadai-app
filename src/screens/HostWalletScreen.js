@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Alert, Linking, AppState } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 import { useFocusEffect } from "@react-navigation/native";
+import ScreenHeader from "../components/ScreenHeader";
 
-export default function HostWalletScreen() {
+export default function HostWalletScreen({ navigation }) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState({ available: 0, pending: 0, blocked: 0 });
   const [error, setError] = useState("");
@@ -58,7 +58,14 @@ export default function HostWalletScreen() {
     }, [])
   );
 
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ScreenHeader title={t("walletTitle")} onBack={() => navigation.goBack()} />
+        <ActivityIndicator style={{ flex: 1 }} />
+      </SafeAreaView>
+    );
+  }
 
   const Row = ({ label, value, color }) => (
     <View style={styles.row}>
@@ -95,9 +102,9 @@ export default function HostWalletScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top + 8 }]}>
+    <SafeAreaView style={styles.container}>
+      <ScreenHeader title={t("walletTitle")} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <Text style={styles.title}>{t("walletTitle")}</Text>
         {error ? <Text style={{ color: "#dc2626", marginBottom: 8 }}>{error}</Text> : null}
 
         {!stripeStatus.accountId && (
