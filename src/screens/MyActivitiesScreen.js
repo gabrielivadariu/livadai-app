@@ -10,13 +10,6 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const isFuture = (exp) => {
-  const now = new Date();
-  if (exp?.endDate) return new Date(exp.endDate) > now;
-  if (exp?.date) return new Date(exp.date) > now;
-  return false;
-};
-
 const isPast = (exp) => {
   const now = new Date();
   if (exp?.endDate) return new Date(exp.endDate) < now;
@@ -25,6 +18,7 @@ const isPast = (exp) => {
 };
 
 const chatAllowedStatuses = new Set(["PAID", "COMPLETED", "DEPOSIT_PAID"]);
+const hostHistoryStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
 
 export default function MyActivitiesScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -39,46 +33,29 @@ export default function MyActivitiesScreen({ navigation }) {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      if (isHost) {
-        // Show own hosted experiences
-        const { data } = await api.get("/experiences/me");
-        const up = [];
-        const past = [];
-        (data || []).forEach((exp) => {
-          let status = exp.status || "PUBLISHED";
-          if (exp.status === "cancelled" || exp.isActive === false) status = "CANCELLED";
-          if (exp.soldOut) status = "SOLD_OUT";
-          const rec = {
-            id: exp._id,
-            experience: exp,
-            status,
-            quantity: exp.maxParticipants || 1,
-          };
-          if (isFuture(exp)) up.push(rec);
-          else past.push(rec);
-        });
-        setUpcoming(up);
-        setHistory(past);
-      } else {
-        // Explorer bookings
-        const { data } = await api.get("/bookings/me");
-        const up = [];
-        const past = [];
-        data.forEach((b) => {
-          const exp = b.experience || {};
-          const record = {
-            id: b._id,
-            experience: exp,
-            status: b.status,
-            quantity: b.quantity || 1,
-            host: b.host,
-          };
-          if (isFuture(exp) || b.status === "PENDING") up.push(record);
-          else past.push(record);
-        });
-        setUpcoming(up);
-        setHistory(past);
-      }
+      const { data } = await api.get("/bookings/me");
+      const up = [];
+      const past = [];
+      data.forEach((b) => {
+        const exp = b.experience || {};
+        const record = {
+          id: b._id,
+          experience: exp,
+          status: b.status,
+          quantity: b.quantity || 1,
+          host: isHost ? b.explorer : b.host,
+        };
+        if (isHost) {
+          if (hostHistoryStatuses.has(b.status)) past.push(record);
+          else up.push(record);
+        } else if (b.status !== "PENDING") {
+          past.push(record);
+        } else {
+          up.push(record);
+        }
+      });
+      setUpcoming(up);
+      setHistory(past);
     } catch (e) {
       setUpcoming([]);
       setHistory([]);
