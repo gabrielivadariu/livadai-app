@@ -26,17 +26,25 @@ export default function ExperienceListScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const isHost = user?.role === "HOST";
   const hostIdFilter = route?.params?.hostId;
+  const normalizedHostId =
+    typeof hostIdFilter === "string" ? hostIdFilter : hostIdFilter?._id || hostIdFilter?.id;
 
   const load = useCallback(async () => {
+    setLoading(true);
     try {
-      const { data } = await api.get("/experiences");
-      setItems(data);
+      if (normalizedHostId) {
+        const { data } = await api.get(`/hosts/${normalizedHostId}/activities`);
+        setItems(data || []);
+      } else {
+        const { data } = await api.get("/experiences");
+        setItems(data || []);
+      }
     } catch (_e) {
-      // silent fallback handled by empty state
+      setItems([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [normalizedHostId]);
 
   useEffect(() => {
     load();
@@ -78,7 +86,7 @@ export default function ExperienceListScreen({ navigation, route }) {
 
   const filteredItems = useMemo(() => {
     const term = debouncedSearch.toLowerCase();
-    const base = hostIdFilter ? items.filter((it) => (it.host?._id || it.host) === hostIdFilter) : items;
+    const base = normalizedHostId ? items.filter((it) => (it.host?._id || it.host) === normalizedHostId) : items;
     if (!term) return base;
     return base.filter((it) => {
       const title = (it.title || "").toLowerCase();
