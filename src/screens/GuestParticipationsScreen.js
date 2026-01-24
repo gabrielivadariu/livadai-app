@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import AppHeader from "../components/AppHeader";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 
@@ -33,7 +32,6 @@ export default function GuestParticipationsScreen({ navigation }) {
   const [tab, setTab] = useState("upcoming");
   const [upcoming, setUpcoming] = useState([]);
   const [history, setHistory] = useState([]);
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
 
@@ -129,8 +127,7 @@ export default function GuestParticipationsScreen({ navigation }) {
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: Math.max(0, insets.top - 6) }]} edges={["top", "left", "right"]}>
-      <AppHeader variant="simple" onNotifications={() => navigation.navigate("Notifications")} unread={0} />
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
 
       <View style={styles.tabs}>
         <TouchableOpacity
@@ -176,7 +173,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f4f6fb", paddingHorizontal: 12 },
   tabs: {
     flexDirection: "row",
-    marginTop: 8,
+    marginTop: 0,
     marginBottom: 8,
     backgroundColor: "#e2e8f0",
     borderRadius: 12,
