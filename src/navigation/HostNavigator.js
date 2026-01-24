@@ -1,7 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import HostDashboardScreen from "../screens/HostDashboardScreen";
 import CreateActivityScreen from "../screens/CreateActivityScreen";
@@ -26,7 +24,7 @@ export default function HostNavigator() {
   const { t } = useTranslation();
   return (
     <Stack.Navigator
-      screenOptions={({ navigation }) => ({
+      screenOptions={{
         headerShown: false,
         headerStyle: { backgroundColor: "#f5f7fb" },
         headerTitleStyle: {
@@ -37,31 +35,7 @@ export default function HostNavigator() {
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
         headerTitleAlign: "left",
-        headerLeft: ({ canGoBack }) =>
-          canGoBack ? (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                marginLeft: 12,
-                width: 36,
-                height: 36,
-                borderRadius: 18,
-                backgroundColor: "rgba(255,255,255,0.9)",
-                alignItems: "center",
-                justifyContent: "center",
-                borderWidth: 1,
-                borderColor: "#e2e8f0",
-                shadowColor: "#0f172a",
-                shadowOpacity: 0.08,
-                shadowRadius: 8,
-                shadowOffset: { width: 0, height: 4 },
-                elevation: 2,
-              }}
-            >
-              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
-            </TouchableOpacity>
-          ) : null,
-      })}
+      }}
     >
       <Stack.Screen name="HostDashboard" component={HostDashboardScreen} options={{ title: "Host Dashboard", headerShown: false }} />
       <Stack.Screen name="CreateExperience" component={CreateActivityScreen} options={{ title: "Create Experience", headerShown: false }} />

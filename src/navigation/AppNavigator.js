@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ActivityIndicator, View, TouchableOpacity } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
@@ -41,22 +41,6 @@ const headerTitleStyle = {
   fontWeight: "900",
   fontSize: 20,
 };
-const headerBackButtonStyle = {
-  marginLeft: 12,
-  width: 36,
-  height: 36,
-  borderRadius: 18,
-  backgroundColor: "rgba(255,255,255,0.9)",
-  alignItems: "center",
-  justifyContent: "center",
-  borderWidth: 1,
-  borderColor: "#e2e8f0",
-  shadowColor: "#0f172a",
-  shadowOpacity: 0.08,
-  shadowRadius: 8,
-  shadowOffset: { width: 0, height: 4 },
-  elevation: 2,
-};
 
 function DummyTab() {
   return null;
@@ -73,12 +57,6 @@ function ExperiencesStack() {
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
         headerTitleAlign: "left",
-        headerLeft: ({ canGoBack }) =>
-          canGoBack ? (
-            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
-              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
-            </TouchableOpacity>
-          ) : null,
       })}
     >
       <Stack.Screen name="ExperienceList" component={ExperienceListScreen} />
@@ -113,12 +91,6 @@ function MapStack() {
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
         headerTitleAlign: "left",
-        headerLeft: ({ canGoBack }) =>
-          canGoBack ? (
-            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
-              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
-            </TouchableOpacity>
-          ) : null,
       })}
     >
       <Stack.Screen name="ExperienceMap" component={ExperienceMapScreen} />
@@ -152,12 +124,6 @@ function MyActivitiesStack() {
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
         headerTitleAlign: "left",
-        headerLeft: ({ canGoBack }) =>
-          canGoBack ? (
-            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
-              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
-            </TouchableOpacity>
-          ) : null,
       })}
     >
       <Stack.Screen name="MyActivities" component={MyActivitiesScreen} />
@@ -184,12 +150,6 @@ function ExplorerProfileStack() {
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
         headerTitleAlign: "left",
-        headerLeft: ({ canGoBack }) =>
-          canGoBack ? (
-            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
-              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
-            </TouchableOpacity>
-          ) : null,
       })}
     >
       <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} />
