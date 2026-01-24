@@ -46,8 +46,8 @@ function ExperiencesStack() {
       <Stack.Screen name="Conversations" component={ConversationsScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="CreateActivity" component={CreateActivityScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Stack.Screen
@@ -55,7 +55,7 @@ function ExperiencesStack() {
         component={InfoScreen}
         options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -69,8 +69,8 @@ function MapStack() {
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Conversations" component={ConversationsScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Stack.Screen
@@ -78,7 +78,7 @@ function MapStack() {
         component={InfoScreen}
         options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -91,8 +91,8 @@ function MyActivitiesStack() {
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: "Edit Host" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
@@ -105,7 +105,7 @@ function ExplorerProfileStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: "Host" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen
         name="EditExplorerProfile"

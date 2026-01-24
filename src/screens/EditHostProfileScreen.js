@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGUAGES } from "../constants/languages";
 import { emitRefreshHostProfile } from "../utils/eventBus";
 import { AuthContext } from "../context/AuthContext";
+import ScreenHeader from "../components/ScreenHeader";
 
 export default function EditHostProfileScreen({ navigation }) {
   const [profile, setProfile] = useState({});
@@ -121,11 +122,10 @@ export default function EditHostProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScreenHeader title={t("editProfile")} onBack={() => navigation.goBack()} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 0 }} keyboardShouldPersistTaps="handled">
-            <Text style={styles.title}>Edit Host Profile</Text>
-
             <TouchableOpacity style={styles.avatarRow} onPress={pickAvatar}>
               <Image source={{ uri: profile.avatar || "https://via.placeholder.com/80" }} style={styles.avatar} />
               <Text style={styles.link}>{t("changeAvatar")}</Text>

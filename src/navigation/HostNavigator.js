@@ -37,8 +37,8 @@ export default function HostNavigator() {
           title: route.params?.otherUserName || route.params?.experienceTitle || "Chat",
         })}
       />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ title: "Host Profile" }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ title: "Edit Host Profile" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ title: "Wallet / Payments" }} />
       <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ title: "Experiences as Guest", headerShown: false }} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={{ headerShown: false }} />
