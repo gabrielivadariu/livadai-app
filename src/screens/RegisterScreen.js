@@ -80,11 +80,16 @@ export default function RegisterScreen({ navigation }) {
   ];
   const [codeModal, setCodeModal] = useState(false);
   const [codeSearch, setCodeSearch] = useState("");
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password);
 
   const onSubmit = async () => {
     setError("");
     if (!name || !email || !password || !confirmPassword || !phone || !phoneCode) {
       setError(t("completeRequired"));
+      return;
+    }
+    if (!isPasswordValid) {
+      setError(t("passwordRules"));
       return;
     }
     if (password !== confirmPassword) {
@@ -185,6 +190,7 @@ export default function RegisterScreen({ navigation }) {
           activeOutlineColor={livadaiColors.primary}
           theme={{ colors: { primary: livadaiColors.primary, text: "#0f172a", placeholder: "#94a3b8", background: "#fff" } }}
         />
+        <Text style={[styles.hint, isPasswordValid ? styles.hintOk : styles.hintWarn]}>{t("passwordRules")}</Text>
         <TextInput
           label={t("confirmPassword", { defaultValue: "Confirmă parola" })}
           mode="outlined"
@@ -242,8 +248,16 @@ export default function RegisterScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={0.9} onPress={onSubmit} style={{ width: "100%" }} disabled={!termsChecked}>
-          <LinearGradient colors={livadaiColors.gradient} style={[styles.button, !termsChecked && styles.buttonDisabled]}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={onSubmit}
+          style={{ width: "100%" }}
+          disabled={!termsChecked || !isPasswordValid || password !== confirmPassword}
+        >
+          <LinearGradient
+            colors={livadaiColors.gradient}
+            style={[styles.button, (!termsChecked || !isPasswordValid || password !== confirmPassword) && styles.buttonDisabled]}
+          >
             <Text style={styles.buttonText}>{t("register")}</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -403,6 +417,13 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontWeight: "600",
   },
+  hint: {
+    marginTop: -6,
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  hintOk: { color: livadaiColors.primary },
+  hintWarn: { color: "#ef4444" },
   buttonDisabled: {
     opacity: 0.6,
   },

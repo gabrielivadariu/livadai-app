@@ -5,6 +5,7 @@
   "name": "Nume",
   "email": "Email",
   "password": "Parolă",
+  "passwordRules": "Minim 8 caractere, 1 literă mare, 1 literă mică, 1 cifră, 1 caracter special.",
   "register": "Register",
   "login": "Login",
   "haveAccount": "Ai deja cont? Intră în aplicație",

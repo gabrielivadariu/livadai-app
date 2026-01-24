@@ -5,6 +5,7 @@
   "name": "Name",
   "email": "Email",
   "password": "Password",
+  "passwordRules": "Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character.",
   "register": "Register",
   "login": "Login",
   "haveAccount": "Already have an account? Login",

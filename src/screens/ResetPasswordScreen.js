@@ -11,6 +11,8 @@ export default function ResetPasswordScreen({ navigation, route }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
+  const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password);
+  const canSubmit = !loading && isPasswordValid && password === confirm && email.trim() && otp.trim().length === 6;
 
   const submit = async () => {
     if (!email.trim()) {
@@ -21,8 +23,8 @@ export default function ResetPasswordScreen({ navigation, route }) {
       Alert.alert("", t("otpRequired", { defaultValue: "Introdu codul de 6 cifre" }));
       return;
     }
-    if (!password || password.length < 8) {
-      Alert.alert("", t("passwordTooShort", { defaultValue: "Parola trebuie să aibă minim 8 caractere" }));
+    if (!isPasswordValid) {
+      Alert.alert("", t("passwordRules"));
       return;
     }
     if (password !== confirm) {
@@ -77,6 +79,7 @@ export default function ResetPasswordScreen({ navigation, route }) {
           placeholder={t("newPassword", { defaultValue: "Parolă nouă" })}
           placeholderTextColor="#9ca3af"
         />
+        <Text style={[styles.hint, isPasswordValid ? styles.hintOk : styles.hintWarn]}>{t("passwordRules")}</Text>
         <TextInput
           secureTextEntry
           value={confirm}
@@ -85,7 +88,7 @@ export default function ResetPasswordScreen({ navigation, route }) {
           placeholder={t("confirmPassword", { defaultValue: "Confirmă parola" })}
           placeholderTextColor="#9ca3af"
         />
-        <TouchableOpacity style={[styles.btn, loading && { opacity: 0.6 }]} onPress={submit} disabled={loading}>
+        <TouchableOpacity style={[styles.btn, !canSubmit && { opacity: 0.6 }]} onPress={submit} disabled={!canSubmit}>
           <Text style={styles.btnText}>{loading ? t("loading") : t("resetPassword", { defaultValue: "Resetează parola" })}</Text>
         </TouchableOpacity>
       </View>
@@ -106,6 +109,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 12,
   },
+  hint: {
+    marginTop: -6,
+    marginBottom: 10,
+    fontSize: 12,
+  },
+  hintOk: { color: livadaiColors.primary },
+  hintWarn: { color: "#ef4444" },
   btn: { backgroundColor: livadaiColors.primary, padding: 14, borderRadius: 12, alignItems: "center" },
   btnText: { color: "#fff", fontWeight: "800" },
 });
