@@ -13,6 +13,7 @@ import NotificationsScreen from "../screens/NotificationsScreen";
 import ExplorerProfileScreen from "../screens/ExplorerProfileScreen";
 import BookingDetailScreen from "../screens/BookingDetailScreen";
 import HostParticipantsScreen from "../screens/HostParticipantsScreen";
+import GuestParticipationsScreen from "../screens/GuestParticipationsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ export default function HostNavigator() {
       <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ title: "Host Profile" }} />
       <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ title: "Edit Host Profile" }} />
       <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ title: "Wallet / Payments" }} />
+      <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ title: "Experiences as Guest", headerShown: false }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking" }} />
