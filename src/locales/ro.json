@@ -222,6 +222,7 @@
   "status_paid": "Plătit",
   "status_completed": "Finalizat",
   "status_cancelled": "Anulat",
+  "status_refunded": "Refundat",
   "status_deposit_paid": "Depozit plătit",
   "status_published": "Activă",
   "status_sold_out": "Epuizată",

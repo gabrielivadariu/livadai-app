@@ -247,6 +247,7 @@
   "status_paid": "Paid",
   "status_completed": "Completed",
   "status_cancelled": "Cancelled",
+  "status_refunded": "Refunded",
   "status_deposit_paid": "Deposit paid",
   "status_published": "Active",
   "status_sold_out": "Sold out",

@@ -9,7 +9,8 @@ import AppHeader from "../components/AppHeader";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 
-const historyStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
+const historyStatuses = new Set(["COMPLETED", "AUTO_COMPLETED", "CANCELLED", "REFUNDED", "NO_SHOW"]);
+const activeStatuses = new Set(["PENDING", "PAID", "DEPOSIT_PAID", "CONFIRMED"]);
 
 const getId = (value) => {
   if (!value) return "";
@@ -50,12 +51,16 @@ export default function GuestParticipationsScreen({ navigation }) {
       ownParticipantBookings.forEach((b) => {
         const exp = b.experience || {};
         if (historyStatuses.has(b.status)) {
-          if (b.status !== "COMPLETED" || isCompletedVisible(exp)) {
+          if (!["COMPLETED", "AUTO_COMPLETED"].includes(b.status) || isCompletedVisible(exp)) {
             past.push(b);
           }
-        } else {
-          next.push(b);
+          return;
         }
+        if (activeStatuses.has(b.status)) {
+          next.push(b);
+          return;
+        }
+        next.push(b);
       });
       setUpcoming(next);
       setHistory(past);
@@ -101,12 +106,21 @@ export default function GuestParticipationsScreen({ navigation }) {
 
   const renderHistory = ({ item }) => {
     const exp = item.experience || {};
-    const statusLabel = t(`status_${(item.status || "").toLowerCase()}`, { defaultValue: item.status });
+    const statusLabelMap = {
+      COMPLETED: t("status_completed"),
+      AUTO_COMPLETED: t("status_completed"),
+      CANCELLED: t("status_cancelled"),
+      REFUNDED: t("status_refunded"),
+      NO_SHOW: t("markedNoShow"),
+    };
+    const statusLabel = statusLabelMap[item.status] || item.status;
+    const dateText = exp.startDate ? `${new Date(exp.startDate).toLocaleDateString()} ${exp.startTime || ""}` : "";
     return (
       <View style={styles.card}>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{exp.title || t("experience", { defaultValue: "Experience" })}</Text>
           <Text style={styles.meta}>{statusLabel}</Text>
+          {dateText ? <Text style={styles.meta}>{dateText}</Text> : null}
         </View>
       </View>
     );
