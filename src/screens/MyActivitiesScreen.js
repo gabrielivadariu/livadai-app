@@ -131,6 +131,8 @@ export default function MyActivitiesScreen({ navigation }) {
             >
               <Text style={styles.reviewBtnText}>{t("leaveReview")}</Text>
             </TouchableOpacity>
+          ) : item.status === "COMPLETED" && !item.reviewExists ? (
+            <Text style={styles.reviewHint}>{t("reviewAvailableLater")}</Text>
           ) : null}
         </View>
         <Ionicons name="chevron-forward" size={20} color="#6b7280" />
@@ -238,5 +240,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   reviewBtnText: { color: livadaiColors.primary, fontWeight: "700" },
+  reviewHint: { color: livadaiColors.secondaryText, fontSize: 12, marginTop: 6 },
   empty: { color: "#6b7280", textAlign: "center", paddingVertical: 6 },
 });

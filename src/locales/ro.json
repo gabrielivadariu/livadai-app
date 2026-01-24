@@ -205,6 +205,7 @@
   "leaveReview": "Lasă o recenzie",
   "reviewSaved": "Recenzia a fost salvată",
   "reviewFailed": "Nu am putut salva recenzia",
+  "reviewAvailableLater": "Recenzia va fi disponibilă la 48h după încheierea experienței.",
   "reviewPlaceholder": "Povestește cum a fost experiența cu această gazdă...",
   "ratingHint": "Alege o notă de la 1 la 5",
   "submit": "Trimite",

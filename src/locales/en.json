@@ -230,6 +230,7 @@
   "leaveReview": "Leave a review",
   "reviewSaved": "Review saved",
   "reviewFailed": "Could not save review",
+  "reviewAvailableLater": "Reviews become available 48 hours after the experience ends.",
   "reviewPlaceholder": "Share your experience with this host...",
   "ratingHint": "Rate from 1 to 5",
   "submit": "Submit",
