@@ -247,15 +247,7 @@ export default function HostProfileScreen({ route, navigation }) {
             <TouchableOpacity
               style={styles.outlineBtn}
               onPress={() => {
-                const parentNav = navigation.getParent?.();
-                if (parentNav) {
-                  parentNav.navigate("ExperiencesTab", {
-                    screen: "ExperienceList",
-                    params: { hostId: effectiveHostId },
-                  });
-                } else {
-                  navigation.navigate("ExperienceList", { hostId: effectiveHostId });
-                }
+                navigation.navigate("HostedExperiences", { hostId: effectiveHostId });
               }}
             >
               <Text style={styles.link}>{t("seeAllHosted")}</Text>
