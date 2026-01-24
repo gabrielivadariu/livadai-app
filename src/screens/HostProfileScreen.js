@@ -264,9 +264,6 @@ export default function HostProfileScreen({ route, navigation }) {
           </View>
         ) : null}
 
-        <TouchableOpacity style={styles.cta} onPress={() => navigation.navigate("ExperienceList", { hostId })}>
-          <Text style={styles.ctaText}>See upcoming events</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -320,8 +317,6 @@ const styles = StyleSheet.create({
   reviewAuthor: { fontWeight: "700", color: livadaiColors.primaryText },
   reviewDate: { color: livadaiColors.secondaryText, fontSize: 12 },
   reviewBody: { color: livadaiColors.primaryText, marginTop: 6, lineHeight: 20 },
-  cta: { marginTop: 16, backgroundColor: livadaiColors.primary, padding: 14, borderRadius: 12, alignItems: "center" },
-  ctaText: { color: "#fff", fontWeight: "800" },
   activityCard: { marginTop: 8, padding: 12, borderRadius: 12, backgroundColor: livadaiColors.card, borderWidth: 1, borderColor: livadaiColors.border },
   activityTitle: { fontWeight: "800", color: livadaiColors.primaryText },
   activityMeta: { color: livadaiColors.secondaryText, marginTop: 2 },
