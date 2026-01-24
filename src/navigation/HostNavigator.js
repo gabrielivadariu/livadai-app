@@ -1,7 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HostDashboardScreen from "../screens/HostDashboardScreen";
-import HostExperiencesScreen from "../screens/HostExperiencesScreen";
 import CreateActivityScreen from "../screens/CreateActivityScreen";
 import EditExperienceScreen from "../screens/EditExperienceScreen";
 import HostBookingsScreen from "../screens/HostBookingsScreen";
@@ -21,7 +20,6 @@ export default function HostNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="HostDashboard" component={HostDashboardScreen} options={{ title: "Host Dashboard", headerShown: false }} />
-      <Stack.Screen name="HostExperiences" component={HostExperiencesScreen} options={{ title: "Experiences", headerShown: true }} />
       <Stack.Screen name="CreateExperience" component={CreateActivityScreen} options={{ title: "Create Experience", headerShown: false }} />
       <Stack.Screen
         name="EditExperience"

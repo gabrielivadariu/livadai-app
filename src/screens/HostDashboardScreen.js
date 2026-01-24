@@ -15,7 +15,7 @@ const bg = "#F5F7FB";
 export default function HostDashboardScreen({ navigation }) {
   const { user, logout } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
-  const [stats, setStats] = useState({ experiences: 0, bookings: 0, rating: "-" });
+  const [stats, setStats] = useState({ bookings: 0, rating: "-" });
   const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
@@ -23,21 +23,19 @@ export default function HostDashboardScreen({ navigation }) {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [expRes, bookRes, hostRes, profileRes] = await Promise.all([
-        api.get("/experiences/me"),
+      const [bookRes, hostRes, profileRes] = await Promise.all([
         api.get("/bookings/host"),
         api.get("/hosts/me/profile").catch(() => ({ data: null })),
         api.get("/users/me/profile").catch(() => ({ data: null })),
       ]);
       setStats({
-        experiences: expRes.data?.length || 0,
         bookings: bookRes.data?.length || 0,
         rating: hostRes?.data?.rating_avg ? Number(hostRes.data.rating_avg).toFixed(1) : "-",
       });
       const resolvedName = profileRes?.data?.displayName || profileRes?.data?.name || "";
       setProfileName(resolvedName);
     } catch (e) {
-      setStats({ experiences: 0, bookings: 0, rating: "-" });
+      setStats({ bookings: 0, rating: "-" });
       setProfileName("");
     } finally {
       setLoading(false);
@@ -89,10 +87,6 @@ export default function HostDashboardScreen({ navigation }) {
           <Text style={styles.cardLabel}>{t("hostQuickStats")}</Text>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{stats.experiences}</Text>
-              <Text style={styles.statText}>{t("experiences")}</Text>
-            </View>
-            <View style={styles.statItem}>
               <Text style={styles.statNumber}>{stats.bookings}</Text>
               <Text style={styles.statText}>{t("bookings")}</Text>
             </View>
@@ -109,12 +103,6 @@ export default function HostDashboardScreen({ navigation }) {
             desc={t("hostProfileSubtitle")}
             icon="person-circle"
             onPress={() => navigation.navigate("HostProfile", { hostId: user?._id })}
-          />
-          <ActionCard
-            title={t("hostExperiencesTitle")}
-            desc={t("hostExperiencesSubtitle")}
-            icon="calendar"
-            onPress={() => navigation.navigate("HostExperiences")}
           />
           <ActionCard
             title={t("hostBookingsTitle")}
