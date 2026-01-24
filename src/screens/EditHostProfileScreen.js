@@ -24,7 +24,6 @@ import { useTranslation } from "react-i18next";
 import { SUPPORTED_LANGUAGES } from "../constants/languages";
 import { emitRefreshHostProfile } from "../utils/eventBus";
 import { AuthContext } from "../context/AuthContext";
-import ScreenHeader from "../components/ScreenHeader";
 
 export default function EditHostProfileScreen({ navigation }) {
   const [profile, setProfile] = useState({});
@@ -118,18 +117,10 @@ export default function EditHostProfileScreen({ navigation }) {
     }
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScreenHeader title={t("editProfile")} onBack={() => navigation.goBack()} />
-        <ActivityIndicator style={{ flex: 1 }} />
-      </SafeAreaView>
-    );
-  }
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title={t("editProfile")} onBack={() => navigation.goBack()} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 0 }} keyboardShouldPersistTaps="handled">

@@ -1,5 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import HostDashboardScreen from "../screens/HostDashboardScreen";
 import CreateActivityScreen from "../screens/CreateActivityScreen";
 import EditExperienceScreen from "../screens/EditExperienceScreen";
@@ -15,12 +18,51 @@ import BookingDetailScreen from "../screens/BookingDetailScreen";
 import HostParticipantsScreen from "../screens/HostParticipantsScreen";
 import GuestParticipationsScreen from "../screens/GuestParticipationsScreen";
 import ExperienceDetailScreen from "../screens/ExperienceDetailScreen";
+import { livadaiColors } from "../theme/theme";
 
 const Stack = createNativeStackNavigator();
 
 export default function HostNavigator() {
+  const { t } = useTranslation();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerShown: false,
+        headerStyle: { backgroundColor: "#f5f7fb" },
+        headerTitleStyle: {
+          color: livadaiColors.primary,
+          fontWeight: "900",
+          fontSize: 20,
+        },
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 12,
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: "rgba(255,255,255,0.9)",
+                alignItems: "center",
+                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: "#e2e8f0",
+                shadowColor: "#0f172a",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                shadowOffset: { width: 0, height: 4 },
+                elevation: 2,
+              }}
+            >
+              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
+            </TouchableOpacity>
+          ) : null,
+      })}
+    >
       <Stack.Screen name="HostDashboard" component={HostDashboardScreen} options={{ title: "Host Dashboard", headerShown: false }} />
       <Stack.Screen name="CreateExperience" component={CreateActivityScreen} options={{ title: "Create Experience", headerShown: false }} />
       <Stack.Screen
@@ -28,7 +70,7 @@ export default function HostNavigator() {
         component={EditExperienceScreen}
         options={({ route }) => ({ title: route.params?.experience?.title || "Edit Experience" })}
       />
-      <Stack.Screen name="HostBookings" component={HostBookingsScreen} options={{ title: "Bookings" }} />
+      <Stack.Screen name="HostBookings" component={HostBookingsScreen} options={{ headerShown: true, title: t("hostBookingsTitle") }} />
       <Stack.Screen name="Conversations" component={ConversationsScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="Chat"
@@ -37,12 +79,12 @@ export default function HostNavigator() {
           title: route.params?.otherUserName || route.params?.experienceTitle || "Chat",
         })}
       />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ title: "Wallet / Payments" }} />
-      <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ title: "Experiences as Guest", headerShown: false }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
+      <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ headerShown: true, title: t("walletTitle") }} />
+      <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ headerShown: true, title: t("hostGuestTitle") }} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
       <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking" }} />
       <Stack.Screen name="HostParticipants" component={HostParticipantsScreen} options={{ title: "Participanți" }} />

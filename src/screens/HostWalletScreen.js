@@ -5,9 +5,8 @@ import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 import { useFocusEffect } from "@react-navigation/native";
-import ScreenHeader from "../components/ScreenHeader";
 
-export default function HostWalletScreen({ navigation }) {
+export default function HostWalletScreen() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState({ available: 0, pending: 0, blocked: 0 });
@@ -58,14 +57,7 @@ export default function HostWalletScreen({ navigation }) {
     }, [])
   );
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScreenHeader title={t("walletTitle")} onBack={() => navigation.goBack()} />
-        <ActivityIndicator style={{ flex: 1 }} />
-      </SafeAreaView>
-    );
-  }
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   const Row = ({ label, value, color }) => (
     <View style={styles.row}>
@@ -103,7 +95,6 @@ export default function HostWalletScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title={t("walletTitle")} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {error ? <Text style={{ color: "#dc2626", marginBottom: 8 }}>{error}</Text> : null}
 

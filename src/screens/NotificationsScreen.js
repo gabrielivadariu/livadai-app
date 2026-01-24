@@ -5,7 +5,6 @@ import api from "../services/api";
 import { livadaiColors } from "../theme/theme";
 import { useTranslation } from "react-i18next";
 import { NotificationsContext } from "../context/NotificationsContext";
-import ScreenHeader from "../components/ScreenHeader";
 
 const typeIcon = {
   BOOKING_CONFIRMED: "ticket-outline",
@@ -146,18 +145,10 @@ export default function NotificationsScreen({ navigation }) {
     );
   };
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ScreenHeader title={t("notifications")} onBack={() => navigation.goBack()} />
-        <ActivityIndicator style={{ flex: 1 }} />
-      </View>
-    );
-  }
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
     <View style={styles.container}>
-      <ScreenHeader title={t("notifications")} onBack={() => navigation.goBack()} />
       <FlatList
         data={items}
         keyExtractor={(item) => item._id}

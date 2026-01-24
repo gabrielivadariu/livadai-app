@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from "r
 import { SafeAreaView } from "react-native-safe-area-context";
 import { livadaiColors } from "../theme/theme";
 import { useTranslation } from "react-i18next";
-import ScreenHeader from "../components/ScreenHeader";
 
-export default function InfoScreen({ route, navigation }) {
+export default function InfoScreen({ route }) {
   const { i18n } = useTranslation();
   const title = route?.params?.title || "Info";
   const body = route?.params?.body || "Content coming soon.";
@@ -584,7 +583,6 @@ export default function InfoScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
           {isHowItWorks ? (

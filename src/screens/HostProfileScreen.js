@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { useFocusEffect } from "@react-navigation/native";
 import { subscribeRefreshHostProfile } from "../utils/eventBus";
 import { SUPPORTED_LANGUAGES } from "../constants/languages";
-import ScreenHeader from "../components/ScreenHeader";
 
 export default function HostProfileScreen({ route, navigation }) {
   const { hostId } = route.params || {};
@@ -102,22 +101,8 @@ export default function HostProfileScreen({ route, navigation }) {
     ]);
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScreenHeader title={t("hostProfileTitle")} onBack={() => navigation.goBack()} />
-        <ActivityIndicator style={{ flex: 1 }} />
-      </SafeAreaView>
-    );
-  }
-  if (!profile) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScreenHeader title={t("hostProfileTitle")} onBack={() => navigation.goBack()} />
-        <Text style={{ padding: 16 }}>Host not found</Text>
-      </SafeAreaView>
-    );
-  }
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  if (!profile) return <Text style={{ padding: 16 }}>Host not found</Text>;
 
   const topReviews = reviews.slice(0, 5);
   const languagesArr = Array.isArray(profile.languages)
@@ -138,7 +123,6 @@ export default function HostProfileScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title={t("hostProfileTitle")} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 0 }}>
         <View style={styles.headerCard}>
           <TouchableOpacity disabled={!isSelf} onPress={isSelf ? uploadAvatar : undefined}>

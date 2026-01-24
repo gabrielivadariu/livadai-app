@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
@@ -33,84 +33,173 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const headerStyle = {
+  backgroundColor: "#f5f7fb",
+};
+const headerTitleStyle = {
+  color: livadaiColors.primary,
+  fontWeight: "900",
+  fontSize: 20,
+};
+const headerBackButtonStyle = {
+  marginLeft: 12,
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+  backgroundColor: "rgba(255,255,255,0.9)",
+  alignItems: "center",
+  justifyContent: "center",
+  borderWidth: 1,
+  borderColor: "#e2e8f0",
+  shadowColor: "#0f172a",
+  shadowOpacity: 0.08,
+  shadowRadius: 8,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 2,
+};
+
 function DummyTab() {
   return null;
 }
 
 function ExperiencesStack() {
+  const { t } = useTranslation();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerShown: false,
+        headerStyle,
+        headerTitleStyle,
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
+              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
+            </TouchableOpacity>
+          ) : null,
+      })}
+    >
       <Stack.Screen name="ExperienceList" component={ExperienceListScreen} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Conversations" component={ConversationsScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="CreateActivity" component={CreateActivityScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
+      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
         options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
 function MapStack() {
+  const { t } = useTranslation();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerShown: false,
+        headerStyle,
+        headerTitleStyle,
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
+              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
+            </TouchableOpacity>
+          ) : null,
+      })}
+    >
       <Stack.Screen name="ExperienceMap" component={ExperienceMapScreen} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Conversations" component={ConversationsScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
+      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
         options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
 function MyActivitiesStack() {
+  const { t } = useTranslation();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerShown: false,
+        headerStyle,
+        headerTitleStyle,
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
+              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
+            </TouchableOpacity>
+          ) : null,
+      })}
+    >
       <Stack.Screen name="MyActivities" component={MyActivitiesScreen} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: "Review" }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
+      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
 
 function ExplorerProfileStack() {
+  const { t } = useTranslation();
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerShown: false,
+        headerStyle,
+        headerTitleStyle,
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerTitleAlign: "left",
+        headerLeft: ({ canGoBack }) =>
+          canGoBack ? (
+            <TouchableOpacity onPress={() => navigation.goBack()} style={headerBackButtonStyle}>
+              <Ionicons name="chevron-back" size={26} color={livadaiColors.primary} />
+            </TouchableOpacity>
+          ) : null,
+      })}
+    >
       <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen
         name="EditExplorerProfile"
         component={EditExplorerProfileScreen}
-        options={{ headerShown: true, title: "Edit Profile" }}
+        options={{ headerShown: true, title: t("editProfile") }}
       />
       {/* rollback: become host disabled */}
     </Stack.Navigator>

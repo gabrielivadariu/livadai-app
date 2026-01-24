@@ -1,9 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { livadaiColors } from "../theme/theme";
-import ScreenHeader from "../components/ScreenHeader";
 
 const content = {
   ro: {
@@ -112,40 +110,35 @@ const content = {
   },
 };
 
-export default function HowItWorksHostScreen({ navigation }) {
-  const { i18n, t } = useTranslation();
+export default function HowItWorksHostScreen() {
+  const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith("ro") ? "ro" : "en";
   const data = content[lang];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScreenHeader title={t("howItWorksHost")} onBack={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{data.title}</Text>
-        {data.intro.map((line) => (
-          <Text key={line} style={styles.intro}>
-            {line}
-          </Text>
-        ))}
-        {data.sections.map((section) => (
-          <View key={section.title} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            {section.items.map((item) => (
-              <Text key={item} style={styles.item}>
-                {item}
-              </Text>
-            ))}
-          </View>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {data.intro.map((line) => (
+        <Text key={line} style={styles.intro}>
+          {line}
+        </Text>
+      ))}
+      {data.sections.map((section) => (
+        <View key={section.title} style={styles.section}>
+          <Text style={styles.sectionTitle}>{section.title}</Text>
+          {section.items.map((item) => (
+            <Text key={item} style={styles.item}>
+              {item}
+            </Text>
+          ))}
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: livadaiColors.background },
   content: { padding: 16, paddingBottom: 32, gap: 10 },
-  title: { fontSize: 22, fontWeight: "800", color: livadaiColors.primaryText },
   intro: { color: livadaiColors.secondaryText, lineHeight: 20 },
   section: { marginTop: 10, gap: 6 },
   sectionTitle: { fontSize: 16, fontWeight: "800", color: livadaiColors.primaryText },
