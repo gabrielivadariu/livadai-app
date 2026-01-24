@@ -73,32 +73,7 @@ export default function HostProfileScreen({ route, navigation }) {
   };
 
   const handleDeleteAccount = () => {
-    Alert.alert(t("deleteAccountConfirmTitle"), t("deleteAccountConfirmBody"), [
-      { text: t("cancel"), style: "cancel" },
-      {
-        text: t("continue"),
-        style: "destructive",
-        onPress: () => {
-          Alert.alert(t("deleteAccountFinalTitle"), t("deleteAccountFinalBody"), [
-            { text: t("cancel"), style: "cancel" },
-            {
-              text: t("deletePermanently"),
-              style: "destructive",
-              onPress: async () => {
-                try {
-                  await api.delete("/users/me");
-                  await logout();
-                  navigation.reset({ index: 0, routes: [{ name: "Login" }] });
-                } catch (e) {
-                  const msg = e?.response?.data?.message || t("deleteAccountFailed");
-                  Alert.alert("", msg);
-                }
-              },
-            },
-          ]);
-        },
-      },
-    ]);
+    navigation.navigate("DeleteAccount");
   };
 
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;

@@ -25,6 +25,7 @@ import EditExplorerProfileScreen from "../screens/EditExplorerProfileScreen";
 import HostNavigator from "./HostNavigator";
 import HowItWorksHostScreen from "../screens/HowItWorksHostScreen";
 import HostedExperiencesScreen from "../screens/HostedExperiencesScreen";
+import DeleteAccountScreen from "../screens/DeleteAccountScreen";
 import { livadaiColors } from "../theme/theme";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
@@ -77,6 +78,7 @@ function ExperiencesStack() {
       />
       <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
       <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -111,6 +113,7 @@ function MapStack() {
       />
       <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
       <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -138,6 +141,7 @@ function MyActivitiesStack() {
       <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
@@ -166,6 +170,7 @@ function ExplorerProfileStack() {
         options={{ headerShown: true, title: t("editProfile") }}
       />
       <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
       {/* rollback: become host disabled */}
     </Stack.Navigator>
   );

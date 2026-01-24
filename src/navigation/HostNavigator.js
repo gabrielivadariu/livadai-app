@@ -17,6 +17,7 @@ import HostParticipantsScreen from "../screens/HostParticipantsScreen";
 import GuestParticipationsScreen from "../screens/GuestParticipationsScreen";
 import ExperienceDetailScreen from "../screens/ExperienceDetailScreen";
 import HostedExperiencesScreen from "../screens/HostedExperiencesScreen";
+import DeleteAccountScreen from "../screens/DeleteAccountScreen";
 import { livadaiColors } from "../theme/theme";
 
 const Stack = createNativeStackNavigator();
@@ -59,6 +60,7 @@ export default function HostNavigator() {
       <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ headerShown: true, title: t("walletTitle") }} />
       <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ headerShown: true, title: t("hostGuestTitle") }} />
       <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
