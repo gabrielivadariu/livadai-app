@@ -10,34 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-const getExperienceEndDate = (exp) => {
-  if (!exp) return null;
-  if (exp.endsAt || exp.endDate) return new Date(exp.endsAt || exp.endDate);
-  if (exp.startDate && exp.durationMinutes) {
-    const start = new Date(exp.startDate);
-    return new Date(start.getTime() + Number(exp.durationMinutes) * 60 * 1000);
-  }
-  if (exp.startsAt && exp.durationMinutes) {
-    const start = new Date(exp.startsAt);
-    return new Date(start.getTime() + Number(exp.durationMinutes) * 60 * 1000);
-  }
-  if (exp.startDate) {
-    const start = new Date(exp.startDate);
-    return new Date(start.getTime() + 24 * 60 * 60 * 1000);
-  }
-  if (exp.startsAt) {
-    const start = new Date(exp.startsAt);
-    return new Date(start.getTime() + 24 * 60 * 60 * 1000);
-  }
-  return null;
-};
-
-const isReviewEligible = (exp, status) => {
-  if (status !== "COMPLETED") return false;
-  const endDate = getExperienceEndDate(exp);
-  if (!endDate || Number.isNaN(endDate.getTime())) return false;
-  return Date.now() > endDate.getTime() + 48 * 60 * 60 * 1000;
-};
+const isReviewEligible = (item) => !!item?.reviewEligible && !item?.reviewExists;
 
 const chatAllowedStatuses = new Set(["PAID", "COMPLETED", "DEPOSIT_PAID"]);
 const hostHistoryStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
@@ -144,7 +117,7 @@ export default function MyActivitiesScreen({ navigation }) {
               <Text style={styles.chatBtnText}>{t("messageHost")}</Text>
             </TouchableOpacity>
           ) : null}
-          {isReviewEligible(exp, item.status) ? (
+          {isReviewEligible(item) ? (
             <TouchableOpacity
               style={styles.reviewBtn}
               onPress={() =>
