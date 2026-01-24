@@ -19,6 +19,7 @@ const isPast = (exp) => {
 
 const chatAllowedStatuses = new Set(["PAID", "COMPLETED", "DEPOSIT_PAID"]);
 const hostHistoryStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
+const explorerHistoryStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
 
 export default function MyActivitiesScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -48,10 +49,9 @@ export default function MyActivitiesScreen({ navigation }) {
         if (isHost) {
           if (hostHistoryStatuses.has(b.status)) past.push(record);
           else up.push(record);
-        } else if (b.status !== "PENDING") {
-          past.push(record);
         } else {
-          up.push(record);
+          if (explorerHistoryStatuses.has(b.status)) past.push(record);
+          else up.push(record);
         }
       });
       setUpcoming(up);
