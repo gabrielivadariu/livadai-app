@@ -11,6 +11,23 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const primary = "#00C2CC";
 const bg = "#F5F7FB";
+const purchasedExcludedStatuses = new Set(["COMPLETED", "CANCELLED", "REFUNDED"]);
+
+const getId = (value) => {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  return value._id || value.id || "";
+};
+
+const getExperienceEndDate = (exp) =>
+  exp?.endDate || exp?.endsAt || exp?.date || exp?.startDate || exp?.startsAt || "";
+
+const isCompletedVisible = (exp) => {
+  const endDate = getExperienceEndDate(exp);
+  if (!endDate) return true;
+  const endMs = new Date(endDate).getTime();
+  return Date.now() > endMs + 48 * 60 * 60 * 1000;
+};
 
 export default function HostDashboardScreen({ navigation }) {
   const { user, logout } = useContext(AuthContext);
@@ -18,15 +35,19 @@ export default function HostDashboardScreen({ navigation }) {
   const [stats, setStats] = useState({ bookings: 0, rating: "-" });
   const [profileName, setProfileName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [purchasedTab, setPurchasedTab] = useState("upcoming");
+  const [purchasedUpcoming, setPurchasedUpcoming] = useState([]);
+  const [purchasedHistory, setPurchasedHistory] = useState([]);
   const { t } = useTranslation();
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [bookRes, hostRes, profileRes] = await Promise.all([
+      const [bookRes, hostRes, profileRes, meBookingsRes] = await Promise.all([
         api.get("/bookings/host"),
         api.get("/hosts/me/profile").catch(() => ({ data: null })),
         api.get("/users/me/profile").catch(() => ({ data: null })),
+        api.get("/bookings/me").catch(() => ({ data: [] })),
       ]);
       setStats({
         bookings: bookRes.data?.length || 0,
@@ -34,13 +55,32 @@ export default function HostDashboardScreen({ navigation }) {
       });
       const resolvedName = profileRes?.data?.displayName || profileRes?.data?.name || "";
       setProfileName(resolvedName);
+      const meId = getId(user?._id);
+      const ownParticipantBookings = (meBookingsRes.data || []).filter((b) => {
+        const participantId = getId(b.explorer || b.user);
+        return participantId && participantId === meId;
+      });
+      const up = [];
+      const past = [];
+      ownParticipantBookings.forEach((b) => {
+        const exp = b.experience || {};
+        if (b.status === "COMPLETED" && isCompletedVisible(exp)) {
+          past.push(b);
+        } else if (!purchasedExcludedStatuses.has(b.status)) {
+          up.push(b);
+        }
+      });
+      setPurchasedUpcoming(up);
+      setPurchasedHistory(past);
     } catch (e) {
       setStats({ bookings: 0, rating: "-" });
       setProfileName("");
+      setPurchasedUpcoming([]);
+      setPurchasedHistory([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
     load();
@@ -95,6 +135,73 @@ export default function HostDashboardScreen({ navigation }) {
               <Text style={styles.statText}>{t("rating")}</Text>
             </View>
           </View>
+        </View>
+
+        <View style={styles.purchasedSection}>
+          <Text style={styles.sectionTitle}>{t("hostPurchasedTitle")}</Text>
+          <View style={styles.tabs}>
+            <TouchableOpacity
+              style={[styles.tabBtn, purchasedTab === "upcoming" && styles.tabBtnActive]}
+              onPress={() => setPurchasedTab("upcoming")}
+            >
+              <Text style={[styles.tabText, purchasedTab === "upcoming" && styles.tabTextActive]}>
+                {t("hostPurchasedUpcoming")}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabBtn, purchasedTab === "history" && styles.tabBtnActive]}
+              onPress={() => setPurchasedTab("history")}
+            >
+              <Text style={[styles.tabText, purchasedTab === "history" && styles.tabTextActive]}>
+                {t("hostPurchasedHistory")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {(purchasedTab === "upcoming" ? purchasedUpcoming : purchasedHistory).length ? (
+            (purchasedTab === "upcoming" ? purchasedUpcoming : purchasedHistory).map((b) => {
+              const exp = b.experience || {};
+              const expId = getId(exp);
+              const dateText = exp.startDate
+                ? `${new Date(exp.startDate).toLocaleDateString()} ${exp.startTime || ""}`
+                : "";
+              if (purchasedTab === "history") {
+                return (
+                  <View key={b._id} style={styles.purchasedCard}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.purchasedTitle}>
+                        {exp.title || t("experience", { defaultValue: "Experience" })}
+                      </Text>
+                      <Text style={styles.purchasedStatus}>{t("bookingCompleted")}</Text>
+                    </View>
+                  </View>
+                );
+              }
+              return (
+                <TouchableOpacity
+                  key={b._id}
+                  style={styles.purchasedCard}
+                  onPress={() => {
+                    if (expId) {
+                      navigation.navigate("ExperienceDetail", { id: expId, bookingId: b._id });
+                    }
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.purchasedTitle}>
+                      {exp.title || t("experience", { defaultValue: "Experience" })}
+                    </Text>
+                    {dateText ? <Text style={styles.purchasedMeta}>{dateText}</Text> : null}
+                    {exp.address ? <Text style={styles.purchasedMeta}>{exp.address}</Text> : null}
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <Text style={styles.emptyText}>
+              {purchasedTab === "upcoming" ? t("hostPurchasedEmptyUpcoming") : t("hostPurchasedEmptyHistory")}
+            </Text>
+          )}
         </View>
 
         <View style={{ marginTop: 16 }}>
@@ -184,4 +291,34 @@ const styles = StyleSheet.create({
   actionDesc: { color: livadaiColors.secondaryText, fontSize: 13, marginTop: 2 },
   logoutBtn: { alignItems: "center", marginTop: 20 },
   logoutText: { color: "#ef4444", fontWeight: "700" },
+  purchasedSection: { marginTop: 16, gap: 10 },
+  sectionTitle: { fontSize: 16, fontWeight: "800", color: livadaiColors.primaryText },
+  tabs: {
+    flexDirection: "row",
+    backgroundColor: "#e2e8f0",
+    borderRadius: 12,
+    padding: 4,
+  },
+  tabBtn: { flex: 1, paddingVertical: 8, borderRadius: 10, alignItems: "center" },
+  tabBtnActive: { backgroundColor: "#fff" },
+  tabText: { color: "#334155", fontWeight: "700", fontSize: 13 },
+  tabTextActive: { color: livadaiColors.primary },
+  purchasedCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  purchasedTitle: { fontWeight: "800", color: livadaiColors.primaryText },
+  purchasedMeta: { color: livadaiColors.secondaryText, fontSize: 12, marginTop: 2 },
+  purchasedStatus: { color: "#166534", fontWeight: "800", marginTop: 4 },
+  emptyText: { color: livadaiColors.secondaryText, paddingVertical: 8 },
 });
