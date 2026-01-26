@@ -160,13 +160,17 @@ export default function HostWalletScreen() {
               color="#f97316"
               currency={stripeBalances.currency}
             />
-            <Text style={styles.note}>{t("walletEstimateNote")}</Text>
+            <Text style={styles.note}>{t("walletStripeNote")}</Text>
             <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={openDashboard}>
               <Text style={styles.buttonText}>{t("openPayoutDashboard")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { marginTop: 8, backgroundColor: "#0284c7" }]} onPress={load}>
               <Text style={styles.buttonText}>{t("walletRefreshStatus")}</Text>
             </TouchableOpacity>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>{t("walletFlowTitle")}</Text>
+              <Text style={styles.infoText}>{t("walletFlowText")}</Text>
+            </View>
           </View>
         )}
       </ScrollView>
@@ -195,6 +199,16 @@ const styles = StyleSheet.create({
   note: { color: livadaiColors.secondaryText, marginTop: 12 },
   sectionTitle: { fontWeight: "800", color: livadaiColors.primaryText, marginTop: 8 },
   divider: { height: 1, backgroundColor: livadaiColors.border, marginVertical: 12 },
+  infoBox: {
+    backgroundColor: "#f8fafc",
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: livadaiColors.border,
+    marginTop: 16,
+  },
+  infoTitle: { fontWeight: "800", color: livadaiColors.primaryText, marginBottom: 6 },
+  infoText: { color: livadaiColors.secondaryText },
   button: {
     backgroundColor: livadaiColors.primary,
     paddingVertical: 12,
