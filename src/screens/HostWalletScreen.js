@@ -10,6 +10,7 @@ export default function HostWalletScreen() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState({ available: 0, pending: 0, blocked: 0 });
+  const [stripeBalances, setStripeBalances] = useState({ available: 0, pending: 0, currency: "ron" });
   const [error, setError] = useState("");
   const [stripeStatus, setStripeStatus] = useState({ accountId: null, payoutsEnabled: false, chargesEnabled: false });
 
@@ -35,6 +36,17 @@ export default function HostWalletScreen() {
       if (acct && payoutsEnabled) {
         const { data } = await api.get("/wallet/summary");
         setBalances(data || { available: 0, pending: 0, blocked: 0 });
+        try {
+          const stripeRes = await api.get("/stripe/wallet/balance");
+          const stripeData = stripeRes?.data || {};
+          setStripeBalances({
+            available: stripeData.available || 0,
+            pending: stripeData.pending || 0,
+            currency: stripeData.currency || "ron",
+          });
+        } catch (stripeErr) {
+          setStripeBalances({ available: 0, pending: 0, currency: "ron" });
+        }
       }
     } catch (e) {
       setError(t("walletLoadError"));
@@ -59,10 +71,12 @@ export default function HostWalletScreen() {
 
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
-  const Row = ({ label, value, color }) => (
+  const Row = ({ label, value, color, currency }) => (
     <View style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
-      <Text style={[styles.rowValue, { color: color || "#0f172a" }]}>{Number(value || 0).toFixed(2)} RON</Text>
+      <Text style={[styles.rowValue, { color: color || "#0f172a" }]}>
+        {Number(value || 0).toFixed(2)} {(currency || "RON").toUpperCase()}
+      </Text>
     </View>
   );
 
@@ -124,12 +138,34 @@ export default function HostWalletScreen() {
         {stripeStatus.accountId && stripeStatus.payoutsEnabled && (
           <View style={styles.card}>
             <Text style={[styles.rowValue, { color: "#16a34a", marginBottom: 8 }]}>{t("stripeActive", { defaultValue: "Stripe activ" })}</Text>
-            <Row label={t("availableBalance")} value={balances.available} color="#16a34a" />
-            <Row label={t("pendingBalance")} value={balances.pending} color="#f97316" />
-            <Row label={t("blockedBalance")} value={balances.blocked} color="#dc2626" />
-            <Text style={styles.note}>{t("walletInfoSoon")}</Text>
+            <Text style={styles.sectionTitle}>{t("walletInternalTitle")}</Text>
+            <Row label={t("walletInternalAvailable")} value={balances.available} color="#16a34a" currency="RON" />
+            <Row label={t("walletInternalPending")} value={balances.pending} color="#f97316" currency="RON" />
+            <Row label={t("walletInternalBlocked")} value={balances.blocked} color="#dc2626" currency="RON" />
+            <Text style={styles.note}>{t("walletEstimateNote")}</Text>
+            <Text style={styles.note}>{t("walletPendingNote")}</Text>
+            <Text style={styles.note}>{t("walletDisputeNote")}</Text>
+
+            <View style={styles.divider} />
+            <Text style={styles.sectionTitle}>{t("walletStripeTitle")}</Text>
+            <Row
+              label={t("walletStripeAvailable")}
+              value={(stripeBalances.available || 0) / 100}
+              color="#16a34a"
+              currency={stripeBalances.currency}
+            />
+            <Row
+              label={t("walletStripePending")}
+              value={(stripeBalances.pending || 0) / 100}
+              color="#f97316"
+              currency={stripeBalances.currency}
+            />
+            <Text style={styles.note}>{t("walletEstimateNote")}</Text>
             <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={openDashboard}>
               <Text style={styles.buttonText}>{t("openPayoutDashboard")}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, { marginTop: 8, backgroundColor: "#0284c7" }]} onPress={load}>
+              <Text style={styles.buttonText}>{t("walletRefreshStatus")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -157,6 +193,8 @@ const styles = StyleSheet.create({
   rowLabel: { color: livadaiColors.secondaryText },
   rowValue: { fontWeight: "800", color: livadaiColors.primaryText },
   note: { color: livadaiColors.secondaryText, marginTop: 12 },
+  sectionTitle: { fontWeight: "800", color: livadaiColors.primaryText, marginTop: 8 },
+  divider: { height: 1, backgroundColor: livadaiColors.border, marginVertical: 12 },
   button: {
     backgroundColor: livadaiColors.primary,
     paddingVertical: 12,
