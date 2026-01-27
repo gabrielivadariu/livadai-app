@@ -43,6 +43,11 @@ const headerTitleStyle = {
   fontWeight: "900",
   fontSize: 20,
 };
+const backTitleOptions = {
+  headerBackTitleVisible: false,
+  headerBackTitle: "",
+  headerBackTitleStyle: { display: "none" },
+};
 
 function DummyTab() {
   return null;
@@ -57,30 +62,57 @@ function ExperiencesStack() {
         headerStyle,
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       })}
     >
-      <Stack.Screen name="ExperienceList" component={ExperienceListScreen} />
-      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="Booking" component={BookingScreen} />
-      <Stack.Screen name="Conversations" component={ConversationsScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="CreateActivity" component={CreateActivityScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
+      <Stack.Screen name="ExperienceList" component={ExperienceListScreen} options={backTitleOptions} />
+      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
+      <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
+      <Stack.Screen name="Conversations" component={ConversationsScreen} options={backTitleOptions} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={backTitleOptions} />
+      <Stack.Screen name="CreateActivity" component={CreateActivityScreen} options={backTitleOptions} />
+      <Stack.Screen
+        name="HostProfile"
+        component={HostProfileScreen}
+        options={{ headerShown: true, title: t("hostProfileTitle"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="EditHostProfile"
+        component={EditHostProfileScreen}
+        options={{ headerShown: true, title: t("editProfile"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Review"
+        component={ReviewScreen}
+        options={{ headerShown: true, title: t("leaveReview"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: t("notifications"), ...backTitleOptions }}
+      />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
-        options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
+        options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info", ...backTitleOptions })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
-      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
-      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
-      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="HowItWorksHost"
+        component={HowItWorksHostScreen}
+        options={{ headerShown: true, title: t("howItWorksHost"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="HostedExperiences"
+        component={HostedExperiencesScreen}
+        options={{ headerShown: true, title: t("hostedExperiences"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{ headerShown: true, title: t("deleteAccount"), ...backTitleOptions }}
+      />
+      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false, ...backTitleOptions }} />
     </Stack.Navigator>
   );
 }
@@ -94,29 +126,56 @@ function MapStack() {
         headerStyle,
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       })}
     >
-      <Stack.Screen name="ExperienceMap" component={ExperienceMapScreen} />
-      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="Booking" component={BookingScreen} />
-      <Stack.Screen name="Conversations" component={ConversationsScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
+      <Stack.Screen name="ExperienceMap" component={ExperienceMapScreen} options={backTitleOptions} />
+      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
+      <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
+      <Stack.Screen name="Conversations" component={ConversationsScreen} options={backTitleOptions} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={backTitleOptions} />
+      <Stack.Screen
+        name="HostProfile"
+        component={HostProfileScreen}
+        options={{ headerShown: true, title: t("hostProfileTitle"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="EditHostProfile"
+        component={EditHostProfileScreen}
+        options={{ headerShown: true, title: t("editProfile"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Review"
+        component={ReviewScreen}
+        options={{ headerShown: true, title: t("leaveReview"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: t("notifications"), ...backTitleOptions }}
+      />
       <Stack.Screen
         name="Info"
         component={InfoScreen}
-        options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info" })}
+        options={({ route }) => ({ headerShown: true, title: route.params?.title || "Info", ...backTitleOptions })}
       />
-      <Stack.Screen name="HowItWorksHost" component={HowItWorksHostScreen} options={{ headerShown: true, title: t("howItWorksHost") }} />
-      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
-      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
-      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="HowItWorksHost"
+        component={HowItWorksHostScreen}
+        options={{ headerShown: true, title: t("howItWorksHost"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="HostedExperiences"
+        component={HostedExperiencesScreen}
+        options={{ headerShown: true, title: t("hostedExperiences"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{ headerShown: true, title: t("deleteAccount"), ...backTitleOptions }}
+      />
+      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false, ...backTitleOptions }} />
     </Stack.Navigator>
   );
 }
@@ -130,22 +189,45 @@ function MyActivitiesStack() {
         headerStyle,
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       })}
     >
-      <Stack.Screen name="MyActivities" component={MyActivitiesScreen} />
-      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="Booking" component={BookingScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
-      <Stack.Screen name="Review" component={ReviewScreen} options={{ headerShown: true, title: t("leaveReview") }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
-      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
-      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
-      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="MyActivities" component={MyActivitiesScreen} options={backTitleOptions} />
+      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
+      <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={backTitleOptions} />
+      <Stack.Screen
+        name="HostProfile"
+        component={HostProfileScreen}
+        options={{ headerShown: true, title: t("hostProfileTitle"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="EditHostProfile"
+        component={EditHostProfileScreen}
+        options={{ headerShown: true, title: t("editProfile"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Review"
+        component={ReviewScreen}
+        options={{ headerShown: true, title: t("leaveReview"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ headerShown: true, title: t("notifications"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="HostedExperiences"
+        component={HostedExperiencesScreen}
+        options={{ headerShown: true, title: t("hostedExperiences"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{ headerShown: true, title: t("deleteAccount"), ...backTitleOptions }}
+      />
+      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false, ...backTitleOptions }} />
     </Stack.Navigator>
   );
 }
@@ -159,22 +241,33 @@ function ExplorerProfileStack() {
         headerStyle,
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       })}
     >
-      <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} />
-      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
-      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} options={backTitleOptions} />
+      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
+      <Stack.Screen
+        name="HostProfile"
+        component={HostProfileScreen}
+        options={{ headerShown: true, title: t("hostProfileTitle"), ...backTitleOptions }}
+      />
+      <Stack.Screen name="Chat" component={ChatScreen} options={backTitleOptions} />
       <Stack.Screen
         name="EditExplorerProfile"
         component={EditExplorerProfileScreen}
-        options={{ headerShown: true, title: t("editProfile") }}
+        options={{ headerShown: true, title: t("editProfile"), ...backTitleOptions }}
       />
-      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
-      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
+      <Stack.Screen
+        name="HostedExperiences"
+        component={HostedExperiencesScreen}
+        options={{ headerShown: true, title: t("hostedExperiences"), ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccountScreen}
+        options={{ headerShown: true, title: t("deleteAccount"), ...backTitleOptions }}
+      />
       {/* rollback: become host disabled */}
     </Stack.Navigator>
   );
@@ -251,16 +344,27 @@ export default function AppNavigator() {
         headerStyle,
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: true, title: "Resetare parolă" }} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: true, title: "Resetare parolă" }} />
-      <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} options={{ headerShown: true, title: "Verifică emailul" }} />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
+        options={{ headerShown: true, title: "Resetare parolă", ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPasswordScreen}
+        options={{ headerShown: true, title: "Resetare parolă", ...backTitleOptions }}
+      />
+      <Stack.Screen
+        name="VerifyEmail"
+        component={VerifyEmailScreen}
+        options={{ headerShown: true, title: "Verifică emailul", ...backTitleOptions }}
+      />
     </Stack.Navigator>
   ) : (
     <MainTabs user={user} />

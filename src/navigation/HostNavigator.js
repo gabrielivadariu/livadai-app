@@ -21,6 +21,11 @@ import DeleteAccountScreen from "../screens/DeleteAccountScreen";
 import { livadaiColors } from "../theme/theme";
 
 const Stack = createNativeStackNavigator();
+const backTitleOptions = {
+  headerBackTitleVisible: false,
+  headerBackTitle: "",
+  headerBackTitleStyle: { display: "none" },
+};
 
 export default function HostNavigator() {
   const { t } = useTranslation();
@@ -35,38 +40,38 @@ export default function HostNavigator() {
           fontSize: 20,
         },
         headerTintColor: livadaiColors.primary,
-        headerBackTitleVisible: false,
-        headerBackTitle: "",
+        ...backTitleOptions,
         headerTitleAlign: "left",
       }}
     >
-      <Stack.Screen name="HostDashboard" component={HostDashboardScreen} options={{ title: "Host Dashboard", headerShown: false }} />
-      <Stack.Screen name="CreateExperience" component={CreateActivityScreen} options={{ title: "Create Experience", headerShown: false }} />
+      <Stack.Screen name="HostDashboard" component={HostDashboardScreen} options={{ title: "Host Dashboard", headerShown: false, ...backTitleOptions }} />
+      <Stack.Screen name="CreateExperience" component={CreateActivityScreen} options={{ title: "Create Experience", headerShown: false, ...backTitleOptions }} />
       <Stack.Screen
         name="EditExperience"
         component={EditExperienceScreen}
-        options={({ route }) => ({ title: route.params?.experience?.title || "Edit Experience" })}
+        options={({ route }) => ({ title: route.params?.experience?.title || "Edit Experience", ...backTitleOptions })}
       />
-      <Stack.Screen name="HostBookings" component={HostBookingsScreen} options={{ headerShown: true, title: t("hostBookingsTitle") }} />
-      <Stack.Screen name="Conversations" component={ConversationsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="HostBookings" component={HostBookingsScreen} options={{ headerShown: true, title: t("hostBookingsTitle"), ...backTitleOptions }} />
+      <Stack.Screen name="Conversations" component={ConversationsScreen} options={{ headerShown: false, ...backTitleOptions }} />
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
         options={({ route }) => ({
           title: route.params?.otherUserName || route.params?.experienceTitle || "Chat",
+          ...backTitleOptions,
         })}
       />
-      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle") }} />
-      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile") }} />
-      <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ headerShown: true, title: t("walletTitle") }} />
-      <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ headerShown: true, title: t("hostGuestTitle") }} />
-      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences") }} />
-      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount") }} />
-      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications") }} />
-      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking" }} />
-      <Stack.Screen name="HostParticipants" component={HostParticipantsScreen} options={{ title: "Participanți" }} />
+      <Stack.Screen name="HostProfile" component={HostProfileScreen} options={{ headerShown: true, title: t("hostProfileTitle"), ...backTitleOptions }} />
+      <Stack.Screen name="EditHostProfile" component={EditHostProfileScreen} options={{ headerShown: true, title: t("editProfile"), ...backTitleOptions }} />
+      <Stack.Screen name="HostWallet" component={HostWalletScreen} options={{ headerShown: true, title: t("walletTitle"), ...backTitleOptions }} />
+      <Stack.Screen name="GuestParticipations" component={GuestParticipationsScreen} options={{ headerShown: true, title: t("hostGuestTitle"), ...backTitleOptions }} />
+      <Stack.Screen name="HostedExperiences" component={HostedExperiencesScreen} options={{ headerShown: true, title: t("hostedExperiences"), ...backTitleOptions }} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: true, title: t("deleteAccount"), ...backTitleOptions }} />
+      <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={{ headerShown: false, ...backTitleOptions }} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications"), ...backTitleOptions }} />
+      <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false, ...backTitleOptions }} />
+      <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking", ...backTitleOptions }} />
+      <Stack.Screen name="HostParticipants" component={HostParticipantsScreen} options={{ title: "Participanți", ...backTitleOptions }} />
     </Stack.Navigator>
   );
 }
