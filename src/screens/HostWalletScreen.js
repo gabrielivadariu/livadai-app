@@ -137,14 +137,17 @@ export default function HostWalletScreen() {
 
         {stripeStatus.accountId && stripeStatus.payoutsEnabled && (
           <View style={styles.card}>
+            <Text style={styles.sectionTitle}>
+              {stripeBalances.available > 0
+                ? t("walletStatusAvailable", { amount: ((stripeBalances.available || 0) / 100).toFixed(2) })
+                : t("walletStatusEmpty")}
+            </Text>
             <Text style={[styles.rowValue, { color: "#16a34a", marginBottom: 8 }]}>{t("stripeActive", { defaultValue: "Stripe activ" })}</Text>
             <Text style={styles.sectionTitle}>{t("walletInternalTitle")}</Text>
             <Row label={t("walletInternalAvailable")} value={balances.available} color="#16a34a" currency="RON" />
             <Row label={t("walletInternalPending")} value={balances.pending} color="#f97316" currency="RON" />
             <Row label={t("walletInternalBlocked")} value={balances.blocked} color="#dc2626" currency="RON" />
             <Text style={styles.note}>{t("walletEstimateNote")}</Text>
-            <Text style={styles.note}>{t("walletPendingNote")}</Text>
-            <Text style={styles.note}>{t("walletDisputeNote")}</Text>
 
             <View style={styles.divider} />
             <Text style={styles.sectionTitle}>{t("walletStripeTitle")}</Text>
@@ -164,6 +167,9 @@ export default function HostWalletScreen() {
             <TouchableOpacity style={[styles.button, { marginTop: 12 }]} onPress={openDashboard}>
               <Text style={styles.buttonText}>{t("openPayoutDashboard")}</Text>
             </TouchableOpacity>
+            {stripeBalances.available <= 0 ? (
+              <Text style={styles.note}>{t("walletCollectDisabled")}</Text>
+            ) : null}
             <TouchableOpacity style={[styles.button, { marginTop: 8, backgroundColor: "#0284c7" }]} onPress={load}>
               <Text style={styles.buttonText}>{t("walletRefreshStatus")}</Text>
             </TouchableOpacity>
