@@ -197,11 +197,6 @@ export default function ExperienceListScreen({ navigation, route }) {
                   </View>
                 ) : null}
 
-                {durationLabel ? (
-                  <View style={styles.metaItem}>
-                    <Text style={styles.metaText} numberOfLines={1}>{durationLabel}</Text>
-                  </View>
-                ) : null}
                 {showSpots ? (
                   <View style={styles.metaItem}>
                     <Ionicons name="people-outline" size={14} color="#475569" />
