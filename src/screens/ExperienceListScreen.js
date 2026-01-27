@@ -201,7 +201,7 @@ export default function ExperienceListScreen({ navigation, route }) {
                   <View style={styles.metaItem}>
                     <Ionicons name="people-outline" size={14} color="#475569" />
                     <Text style={styles.metaText} numberOfLines={1}>
-                      {t("groupSlots", { booked: occupiedSeats, total: totalSeats })} {t("participants")}
+                      {occupiedSeats}/{totalSeats}
                     </Text>
                   </View>
                 ) : null}
