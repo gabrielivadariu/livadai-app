@@ -83,7 +83,7 @@ export default function HostNavigator() {
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: true, title: t("notifications"), ...backTitleOptions }} />
       <Stack.Screen name="PublicProfile" component={ExplorerProfileScreen} options={{ headerShown: false, ...backTitleOptions }} />
       <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} options={{ title: "Booking", ...backTitleOptions }} />
-      <Stack.Screen name="HostParticipants" component={HostParticipantsScreen} options={{ title: "Participanți", ...backTitleOptions }} />
+      <Stack.Screen name="HostParticipants" component={HostParticipantsScreen} options={{ headerShown: true, title: t("hostParticipantsTitle"), ...backTitleOptions }} />
     </Stack.Navigator>
   );
 }
