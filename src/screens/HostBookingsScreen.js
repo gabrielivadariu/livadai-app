@@ -51,13 +51,33 @@ export default function HostBookingsScreen({ navigation }) {
     });
   }, [items]);
 
-  const statusBadge = (b) => {
-    if (b.status === "DISPUTED") return { text: t("disputedStatus"), bg: "#fee2e2", color: "#b91c1c" };
-    if (b.status === "COMPLETED") return { text: t("bookingCompleted"), bg: "#dcfce7", color: "#166534" };
-    if (b.status === "NO_SHOW") return { text: t("bookingNoShow"), bg: "#fee2e2", color: "#b91c1c" };
-    if (["PAID", "DEPOSIT_PAID", "PENDING_ATTENDANCE"].includes(b.status))
+  const statusBadge = (status) => {
+    if (["DISPUTED", "DISPUTE_WON", "DISPUTE_LOST"].includes(status)) {
+      return { text: t("bookingDisputed"), bg: "#fee2e2", color: "#b91c1c" };
+    }
+    if (["COMPLETED", "AUTO_COMPLETED"].includes(status)) {
+      return { text: t("bookingCompleted"), bg: "#dcfce7", color: "#166534" };
+    }
+    if (status === "NO_SHOW") {
+      return { text: t("bookingNoShow"), bg: "#fee2e2", color: "#b91c1c" };
+    }
+    if (status === "PENDING_ATTENDANCE") {
+      return { text: t("bookingPendingConfirm"), bg: "#fef3c7", color: "#92400e" };
+    }
+    if (["PAID", "DEPOSIT_PAID"].includes(status)) {
       return { text: t("bookingActive"), bg: "#e0f2fe", color: "#075985" };
+    }
     return { text: t("bookingUpcoming"), bg: "#f1f5f9", color: "#475569" };
+  };
+
+  const groupStatus = (bookings) => {
+    const statuses = new Set(bookings.map((b) => b.status));
+    if (["DISPUTED", "DISPUTE_WON", "DISPUTE_LOST"].some((s) => statuses.has(s))) return "DISPUTED";
+    if (statuses.has("PENDING_ATTENDANCE")) return "PENDING_ATTENDANCE";
+    if (["PAID", "DEPOSIT_PAID"].some((s) => statuses.has(s))) return "PAID";
+    if (statuses.has("NO_SHOW")) return "NO_SHOW";
+    if (["COMPLETED", "AUTO_COMPLETED"].some((s) => statuses.has(s))) return "COMPLETED";
+    return "PENDING";
   };
 
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
@@ -87,6 +107,7 @@ export default function HostBookingsScreen({ navigation }) {
             : typeof exp.remainingSpots === "number"
               ? exp.remainingSpots + bookedSeats
               : bookedSeats;
+        const badge = statusBadge(groupStatus(item.bookings || []));
         return (
           <TouchableOpacity
             activeOpacity={0.9}
@@ -116,8 +137,15 @@ export default function HostBookingsScreen({ navigation }) {
                   {t("hostBookingsOccupied")}: {bookedSeats} / {totalSeats}
                 </Text>
               </View>
-              <View style={{ backgroundColor: "#e0f2fe", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12 }}>
-                <Text style={{ color: "#075985", fontWeight: "800" }}>{t("bookingActive")}</Text>
+              <View
+                style={{
+                  backgroundColor: badge.bg,
+                  paddingHorizontal: 10,
+                  paddingVertical: 6,
+                  borderRadius: 12,
+                }}
+              >
+                <Text style={{ color: badge.color, fontWeight: "800" }}>{badge.text}</Text>
               </View>
             </View>
             <Text style={{ color: "#475569", fontSize: 12, marginTop: 12 }}>{t("hostBookingsParticipantsHint")}</Text>

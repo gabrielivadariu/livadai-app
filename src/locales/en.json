@@ -387,6 +387,8 @@
   "bookingUpcoming": "Upcoming",
   "bookingCompleted": "Completed",
   "bookingNoShow": "No-show",
+  "bookingPendingConfirm": "Awaiting confirmation",
+  "bookingDisputed": "Disputed",
   "groupConfirmHint": "Confirmation applies to the whole group.\nUse “No one attended” only if the experience did not take place at all. Payout will be processed after a verification period.",
   "reportProblem": "Report a problem",
   "reportReason": "Reason",

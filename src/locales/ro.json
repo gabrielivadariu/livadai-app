@@ -386,6 +386,8 @@
   "bookingUpcoming": "Urmează",
   "bookingCompleted": "Finalizată",
   "bookingNoShow": "No-show",
+  "bookingPendingConfirm": "În așteptare confirmare",
+  "bookingDisputed": "În dispută",
   "groupConfirmHint": "Confirmarea se aplică întregului grup.\nFolosește «Nimeni nu s-a prezentat» doar dacă experiența nu a avut loc deloc. Plata va fi procesată după o perioadă de verificare.",
   "reportProblem": "Raportează o problemă",
   "reportReason": "Motiv",
