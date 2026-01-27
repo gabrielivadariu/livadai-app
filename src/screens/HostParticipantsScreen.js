@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Image, Alert } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../services/api";
 import { useTranslation } from "react-i18next";
 import { livadaiColors } from "../theme/theme";
@@ -8,7 +8,6 @@ import { livadaiColors } from "../theme/theme";
 export default function HostParticipantsScreen({ route, navigation }) {
   const { experienceId } = route.params;
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingAction, setSavingAction] = useState(null);
@@ -114,7 +113,7 @@ export default function HostParticipantsScreen({ route, navigation }) {
   if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc", paddingTop: insets.top }} edges={["top", "left", "right"]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }} edges={["left", "right"]}>
       <View style={{ padding: 16, backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#e2e8f0" }}>
         <Text style={{ fontWeight: "800", color: "#0f172a", fontSize: 18 }}>{experience?.title || t("hostParticipantsTitle")}</Text>
         <Text style={{ color: "#475569", marginTop: 4 }}>{t("hostParticipantsOccupied")}: {bookedSeats} / {totalSeats}</Text>
