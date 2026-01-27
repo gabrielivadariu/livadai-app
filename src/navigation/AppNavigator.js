@@ -58,6 +58,7 @@ function ExperiencesStack() {
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
+        headerBackTitle: "",
         headerTitleAlign: "left",
       })}
     >
@@ -94,6 +95,7 @@ function MapStack() {
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
+        headerBackTitle: "",
         headerTitleAlign: "left",
       })}
     >
@@ -129,6 +131,7 @@ function MyActivitiesStack() {
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
+        headerBackTitle: "",
         headerTitleAlign: "left",
       })}
     >
@@ -157,6 +160,7 @@ function ExplorerProfileStack() {
         headerTitleStyle,
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
+        headerBackTitle: "",
         headerTitleAlign: "left",
       })}
     >
@@ -241,7 +245,17 @@ export default function AppNavigator() {
   }
 
   return !user ? (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerStyle,
+        headerTitleStyle,
+        headerTintColor: livadaiColors.primary,
+        headerBackTitleVisible: false,
+        headerBackTitle: "",
+        headerTitleAlign: "left",
+      }}
+    >
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: true, title: "Resetare parolă" }} />

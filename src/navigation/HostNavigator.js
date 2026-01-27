@@ -36,6 +36,7 @@ export default function HostNavigator() {
         },
         headerTintColor: livadaiColors.primary,
         headerBackTitleVisible: false,
+        headerBackTitle: "",
         headerTitleAlign: "left",
       }}
     >
