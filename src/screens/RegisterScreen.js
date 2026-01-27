@@ -227,11 +227,23 @@ export default function RegisterScreen({ navigation }) {
 
         <Text style={styles.termsText}>
           {i18n.language?.startsWith("ro") ? "Prin crearea unui cont, ești de acord cu " : "By creating an account, you agree to LIVADAI’s "}
-          <Text style={styles.termsLink} onPress={() => Linking.openURL("https://sites.google.com/view/terms-conditions-livadai/pagina-de-pornire")}>
+          <Text
+            style={styles.termsLink}
+            onPress={() =>
+              Linking.openURL(`${(process.env.EXPO_PUBLIC_APP_URL || "https://livadai.com").replace(/\/$/, "")}/terms`)
+            }
+          >
             {i18n.language?.startsWith("ro") ? "Termenii și Condițiile" : "Terms & Conditions"}
           </Text>
           {i18n.language?.startsWith("ro") ? " și " : " and "}
-          <Text style={styles.termsLink} onPress={() => Linking.openURL("https://sites.google.com/view/privacypolicylivadai/pagina-de-pornire")}>
+          <Text
+            style={styles.termsLink}
+            onPress={() =>
+              Linking.openURL(
+                `${(process.env.EXPO_PUBLIC_APP_URL || "https://livadai.com").replace(/\/$/, "")}/privacy`
+              )
+            }
+          >
             {i18n.language?.startsWith("ro") ? "Politica de Confidențialitate" : "Privacy Policy"}
           </Text>
           {i18n.language?.startsWith("ro") ? " LIVADAI." : "."}

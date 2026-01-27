@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { livadaiColors } from "../theme/theme";
@@ -12,6 +12,7 @@ export default function MenuSheet({ visible, onClose }) {
   const { i18n, t } = useTranslation();
   const { logout, user } = useContext(AuthContext);
   const isHost = user?.role === "HOST" || user?.role === "BOTH";
+  const baseUrl = (process.env.EXPO_PUBLIC_APP_URL || "https://livadai.com").replace(/\/$/, "");
 
   const changeLang = async (lng) => {
     await i18n.changeLanguage(lng);
@@ -24,8 +25,17 @@ export default function MenuSheet({ visible, onClose }) {
     onClose();
   };
 
-  const goTo = (title, routeOverride) => {
+  const openExternal = async (path) => {
+    const url = `${baseUrl}${path}`;
+    await Linking.openURL(url);
+  };
+
+  const goTo = (title, routeOverride, externalPath) => {
     onClose();
+    if (externalPath) {
+      openExternal(externalPath);
+      return;
+    }
     if (routeOverride) {
       navigation.navigate(routeOverride);
       return;
@@ -50,15 +60,15 @@ export default function MenuSheet({ visible, onClose }) {
     {
       title: t("legal"),
       items: [
-        { label: t("aboutApp"), icon: "information-circle-outline" },
-        { label: t("privacy"), icon: "lock-closed-outline" },
-        { label: t("terms"), icon: "document-text-outline" },
+        { label: t("aboutApp"), icon: "information-circle-outline", external: "/about" },
+        { label: t("privacy"), icon: "lock-closed-outline", external: "/privacy" },
+        { label: t("terms"), icon: "document-text-outline", external: "/terms" },
       ],
     },
     {
       title: t("contact"),
       items: [
-        { label: t("contactUs"), icon: "chatbubbles-outline" },
+        { label: t("contactUs"), icon: "chatbubbles-outline", external: "/contact" },
       ],
     },
   ];
@@ -95,7 +105,7 @@ export default function MenuSheet({ visible, onClose }) {
                   <TouchableOpacity
                     key={item.label}
                     style={styles.itemRow}
-                    onPress={() => goTo(item.label, item.route)}
+                    onPress={() => goTo(item.label, item.route, item.external)}
                   >
                     <Ionicons name={item.icon} size={20} color={livadaiColors.primaryText} />
                     <Text style={styles.itemLabel}>{item.label}</Text>
