@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "../context/AuthContext";
@@ -48,6 +48,25 @@ const backTitleOptions = {
   headerBackTitle: "",
   headerBackTitleStyle: { display: "none" },
 };
+const getStackOptions = (navigation) => ({
+  headerShown: false,
+  headerStyle,
+  headerTitleStyle,
+  headerTintColor: livadaiColors.primary,
+  headerTitleAlign: "left",
+  ...backTitleOptions,
+  headerBackVisible: false,
+  headerLeft: ({ tintColor, canGoBack }) =>
+    canGoBack ? (
+      <TouchableOpacity
+        accessibilityRole="button"
+        onPress={() => navigation.goBack()}
+        style={{ paddingHorizontal: 8, paddingVertical: 4 }}
+      >
+        <Ionicons name="chevron-back" size={22} color={tintColor || livadaiColors.primary} />
+      </TouchableOpacity>
+    ) : null,
+});
 
 function DummyTab() {
   return null;
@@ -56,16 +75,7 @@ function DummyTab() {
 function ExperiencesStack() {
   const { t } = useTranslation();
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        headerShown: false,
-        headerStyle,
-        headerTitleStyle,
-        headerTintColor: livadaiColors.primary,
-        ...backTitleOptions,
-        headerTitleAlign: "left",
-      })}
-    >
+    <Stack.Navigator screenOptions={({ navigation }) => getStackOptions(navigation)}>
       <Stack.Screen name="ExperienceList" component={ExperienceListScreen} options={backTitleOptions} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
       <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
@@ -120,16 +130,7 @@ function ExperiencesStack() {
 function MapStack() {
   const { t } = useTranslation();
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        headerShown: false,
-        headerStyle,
-        headerTitleStyle,
-        headerTintColor: livadaiColors.primary,
-        ...backTitleOptions,
-        headerTitleAlign: "left",
-      })}
-    >
+    <Stack.Navigator screenOptions={({ navigation }) => getStackOptions(navigation)}>
       <Stack.Screen name="ExperienceMap" component={ExperienceMapScreen} options={backTitleOptions} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
       <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
@@ -183,16 +184,7 @@ function MapStack() {
 function MyActivitiesStack() {
   const { t } = useTranslation();
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        headerShown: false,
-        headerStyle,
-        headerTitleStyle,
-        headerTintColor: livadaiColors.primary,
-        ...backTitleOptions,
-        headerTitleAlign: "left",
-      })}
-    >
+    <Stack.Navigator screenOptions={({ navigation }) => getStackOptions(navigation)}>
       <Stack.Screen name="MyActivities" component={MyActivitiesScreen} options={backTitleOptions} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
       <Stack.Screen name="Booking" component={BookingScreen} options={backTitleOptions} />
@@ -235,16 +227,7 @@ function MyActivitiesStack() {
 function ExplorerProfileStack() {
   const { t } = useTranslation();
   return (
-    <Stack.Navigator
-      screenOptions={({ navigation }) => ({
-        headerShown: false,
-        headerStyle,
-        headerTitleStyle,
-        headerTintColor: livadaiColors.primary,
-        ...backTitleOptions,
-        headerTitleAlign: "left",
-      })}
-    >
+    <Stack.Navigator screenOptions={({ navigation }) => getStackOptions(navigation)}>
       <Stack.Screen name="ExplorerProfile" component={ExplorerProfileScreen} options={backTitleOptions} />
       <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} options={backTitleOptions} />
       <Stack.Screen
@@ -338,16 +321,7 @@ export default function AppNavigator() {
   }
 
   return !user ? (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        headerStyle,
-        headerTitleStyle,
-        headerTintColor: livadaiColors.primary,
-        ...backTitleOptions,
-        headerTitleAlign: "left",
-      }}
-    >
+    <Stack.Navigator screenOptions={({ navigation }) => getStackOptions(navigation)}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen
